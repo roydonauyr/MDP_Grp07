@@ -2,6 +2,7 @@ import json
 import os
 import socket
 from typing import Optional
+import time
 import bluetooth as bt
 from Communication.link import Link
 
@@ -200,6 +201,7 @@ class Android(Link):
     def repeatMessageTest(self):
         message = AndroidMessage("general", "Testing, hi from rpi")
         while True:
+            time.sleep(2) 
             if(self.connected):
                 self.send(message)
             else:
