@@ -331,7 +331,7 @@ export default function Simulator() {
 
   useEffect(() => {
     updateRobotPosition();
-  }, [robotState, obstacles]);
+  }, [robotState]);
 
   useEffect(() => {
     if (page >= path.length) return
