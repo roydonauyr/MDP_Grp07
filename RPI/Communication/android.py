@@ -114,7 +114,8 @@ class Android(Link):
         """
         super().__init__()
         self.hostId = "192.168.7.7"
-        self.uuid = ""
+        self.uuid = "00001101-0000-1000-8000-00805f9b34fb" #Default but should try generated
+        #self.uuid = ""
         self.connected = False
         self.client_socket = None
         self.server_socket = None
@@ -128,7 +129,7 @@ class Android(Link):
         try:
             # Set RPi to be discoverable in order for service to be advertisable
             os.system("sudo hciconfig hci0 piscan")
-
+            
             # Initialize server socket
             self.server_socket = bt.BluetoothSocket(bt.RFCOMM)
             self.server_socket.bind((self.hostId, bt.PORT_ANY))

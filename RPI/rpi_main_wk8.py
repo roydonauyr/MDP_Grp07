@@ -1,5 +1,5 @@
 import json
-import queue
+#import queue
 import time
 from multiprocessing import Process, Manager
 from typing import Optional
@@ -86,7 +86,14 @@ class RaspberryPi:
         try:
             ### Start up initialization ###
             self.android.connect()
-            self.android.repeatMessageTest()
+            while True:
+                message = self.android.receive()
+                if message != None:
+                    print(message)
+                    break
+                else:
+                    print("No message")
+            #self.android.repeatMessageTest()
 
             # self.android_queue.put(AndroidMessage(
             #     'info', 'You are connected to the RPi!'))
