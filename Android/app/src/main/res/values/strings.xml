@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MDPGroup7</string>
+    <string name="tab_text_1">Bluetooth</string>
+    <string name="tab_text_2">Comms</string>
+    <string name="tab_text_3">Map</string>
+    <string name="tab_text_4">Control</string>
+
+    <!--  Comms  -->
+    <string name="send">SEND</string>
+
+
+
+</resources>

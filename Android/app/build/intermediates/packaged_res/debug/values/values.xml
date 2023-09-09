@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="planets_array">
+        <item>up</item>
+        <item>down</item>
+        <item>left</item>
+        <item>right</item>
+    </string-array>
+    <color name="black">#FF000000</color>
+    <color name="border_color">#000000</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorBlack">#636363</color>
+    <color name="colorPrimary">#039BE5</color>
+    <color name="colorPrimaryDark">#1E88E5</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="exploredColor">#FFF9FBE7</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="white">#FFFFFFFF</color>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="appbar_padding">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <string name="app_name">MDPGroup7</string>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+</resources>

@@ -1,0 +1,2 @@
+rootProject.name = "MDPGroup7"
+include ':app'
