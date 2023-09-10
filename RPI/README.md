@@ -23,6 +23,7 @@ Examples of messages (Msg | Explanation)
 * Ready to run! | All child processes have started
 * Link successfully reconnected! | In the event of the connection dropping, this message appears after successfully reconnecting
 * Starting robot on path! | Android tablet sending the start command to RPI
+* Requesting path and commands from algo server... | Retreiving path and commands from algo
 * Commands queue finished! | RPI finished executing all commands in queue
 * Capturing image for obstacle id: {pbstacle_id} | RPI capturing an image on camera for an obstacle
 * Commands and path received Algo API. Robot is ready to move. | Upon receiving commands from algo server
@@ -33,8 +34,8 @@ Examples of messages (Msg | Explanation)
 API is down, start command aborted | When algo api is not ready
 Command queue is empty, did you set obstacles? | When there are no commands in queue
 Something went wrong when requesting stitch from the API. | When stitching fails from api
-Something went wrong when requesting path from Algo API. | When failing to request path from algo
-Something went wrong when requesting path from Image Rec API. | When failing to get the prediction from image rec
+Something went wrong when requesting path and commands from Algo API. | When failing to request path from algo
+Something went wrong when requesting result from Image Rec API. | When failing to get the prediction from image rec
 
 ### Status Messages
 Examples of messages (Msg | Explanation)
@@ -81,9 +82,15 @@ Commands | Explanation
 * BWxx | Robot moves backward by xx units
 * BR00 | Robot moves backward right by 3x1 squares
 * BL00 | Robot moves backward left by 3x1 squares
+* TL |
+* TR |
+* A | 
+* C |
+* DT |  
+* ZZ |
 
 #### Misc Commands
-* Stop | Robot stops moving
+* STOP | Robot stops moving
 * CAP | Robot takes a picture from video stream and send for inference
 * FIN | Robot stops moving, stitches images and send a message to the server to signal end of command queue
 
