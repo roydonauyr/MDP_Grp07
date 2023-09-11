@@ -5,11 +5,11 @@ from multiprocessing import Process, Manager
 from typing import Optional
 import os
 #import requests
-from Communication.android import Android, AndroidMessage
-from Communication.stm import STM
-from Others.const import SYMBOL_MAPPING
+from RPI.Communication.android import Android, AndroidMessage
+from RPI.Communication.stm import STM
+from RPI.Others.const import SYMBOL_MAPPING
 #from logger import prepare_logger
-from Others.configuration import API_IP, API_PORT
+from RPI.Others.configuration import API_IP, API_PORT
 
 class RPiAction:
     """

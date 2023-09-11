@@ -254,6 +254,24 @@ class RaspberryPi:
                         #self.logger.warning("The command queue is empty, please set obstacles.")
                         self.android_queue.put(AndroidMessage("error", "Command queue is empty, did you set obstacles?"))
     
+    def android_sender(self) -> None:
+        """
+        [Child process] Responsible for retrieving messages from android_queue and sending them over the Android link. 
+        """
+        while True:
+            # Retrieve message from queue
+            try:
+                message: AndroidMessage = self.android_queue.get(timeout=0.5)
+            except queue.Empty:
+                continue
+
+            try:
+                self.android.send(message)
+            except OSError:
+                self.android_dropped.set()
+                print("Event set: Android dropped")
+                #self.logger.debug("Event set: Android dropped")
+
     def receive_stm(self) -> None:
         """
         [Child Process] Receive acknowledgement messages from STM, and release the movement lock to allow next movement
