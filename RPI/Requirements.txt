@@ -2,4 +2,5 @@
 # PyBluez==0.23
 # pyserial==3.5
 requests~=2.27.1
-imagezmq
+pyshine
+picamera

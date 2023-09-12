@@ -1,5 +1,5 @@
-from RPI.Communication.pc import PC
-from RPI.Others.configuration import API_IP, API_PORT
+from Communication.pc import PC
+from Others.configuration import API_IP, API_PORT
 import requests
 
 
