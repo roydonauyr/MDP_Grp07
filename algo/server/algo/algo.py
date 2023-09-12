@@ -36,7 +36,7 @@ class MazeSolver:
     def add_obstacle(self, x: int, y: int, direction: Direction, obstacle_id: int):
         """Add obstacle to MazeSolver object
 
-        Params:
+        Args:
             x (int): x coordinate of obstacle
             y (int): y coordinate of obstacle
             direction (Direction): Facing of the obstacle
@@ -54,7 +54,7 @@ class MazeSolver:
     def compute_coord_distance(x1: int, y1: int, x2: int, y2: int, level=1):
         """Compute the L-n distance between two coordinates
 
-        Params:
+        Args:
             x1 (int), y1 (int): Coordinates of the first point
             x2 (int), y2 (int): Coordinates of the second point
             level (int, optional): The type of L-n norm to compute. Defaults to 1 (Manhattan distance). Level 2 is Euclidean distance.
@@ -185,6 +185,21 @@ class MazeSolver:
 
     @staticmethod
     def generate_combination(view_positions, index, current, result, iteration_left):
+        """
+        Generate all possible combinations of view positions up to a given limit of iterations.
+
+        This method uses recursion to explore all possible combinations. It is part of a backtracking algorithm.
+
+        Args:
+            view_positions (List[List[int]]): A list of lists where each inner list contains possible positions at a specific index.
+            index (int): The current index of view_positions to consider.
+            current (List[int]): The current combination of positions being generated.
+            result (List[List[int]]): A list that will store all generated combinations.
+            iteration_left ([int]): A list with a single integer, representing the remaining number of iterations allowed.
+
+        Returns:
+            None: The result list will be modified in-place to include the generated combinations.
+        """
         if index == len(view_positions):
             result.append(current[:])
             return
