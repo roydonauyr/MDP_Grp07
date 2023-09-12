@@ -36,10 +36,10 @@ class MazeSolver:
     def add_obstacle(self, x: int, y: int, direction: Direction, obstacle_id: int):
         """Add obstacle to MazeSolver object
 
-        Args:
+        Params:
             x (int): x coordinate of obstacle
             y (int): y coordinate of obstacle
-            direction (Direction): Direction of obstacle
+            direction (Direction): Facing of the obstacle
             obstacle_id (int): ID of obstacle
         """
         # Create an obstacle object
