@@ -54,24 +54,22 @@ class MazeSolver:
     def compute_coord_distance(x1: int, y1: int, x2: int, y2: int, level=1):
         """Compute the L-n distance between two coordinates
 
-        Args:
-            x1 (int)
-            y1 (int)
-            x2 (int)
-            y2 (int)
-            level (int, optional): L-n distance to compute. Defaults to 1.
+        Params:
+            x1 (int), y1 (int): Coordinates of the first point
+            x2 (int), y2 (int): Coordinates of the second point
+            level (int, optional): The type of L-n norm to compute. Defaults to 1 (Manhattan distance). Level 2 is Euclidean distance.
 
         Returns:
-            float: L-n distance between the two given points
+            float: The computed L-n distance between the two points
         """
-        horizontal_distance = x1 - x2
-        vertical_distance = y1 - y2
+        horizontal_dist = x1 - x2
+        vertical_dist = y1 - y2
 
         # Euclidean distance
         if level == 2:
-            return math.sqrt(horizontal_distance ** 2 + vertical_distance ** 2)
+            return math.sqrt(horizontal_dist ** 2 + vertical_dist ** 2)
 
-        return abs(horizontal_distance) + abs(vertical_distance)
+        return abs(horizontal_dist) + abs(vertical_dist)
 
     @staticmethod
     def compute_state_distance(start_state: CellState, end_state: CellState, level=1):
