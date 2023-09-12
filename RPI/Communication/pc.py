@@ -134,6 +134,7 @@ class PC(Link):
                 print('Server started at','http://' + self.address[0] + ':' + str(self.address[1]))
                 self.server.serve_forever()
                 self.send("Capture")
+                print("Capture")
                 while True:
                     message: Optional[str] = None
                     message = self.receive()

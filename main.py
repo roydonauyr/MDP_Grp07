@@ -17,14 +17,14 @@ def capture():
     print("Capture function")
     
     """Capture the last image from cv2.videocapture()"""
-    cap.open("http://192.168.7.7:5000")
+    cap.open("http://192.168.7.7:5000/stream.mjpg")
 
     while True:
         ret, image = cap.read()
 
         if not ret:
-            print("Error: Failed to capture frame from the webcam.")
-            break
+            print("Error: Server not.")
+            continue
     
         # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         img_gray = cv2.resize(image, (640, 640))
