@@ -29,7 +29,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        /*switch(position) {
+        switch(position) {
             case 0:
                 return CommsFragment.newInstance(position +1);
             case 1:
@@ -38,21 +38,21 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return ControlFragment.newInstance(position+1);
             default:
                 return PlaceholderFragment.newInstance(position + 1);
-        }*/
-        return CommsFragment.newInstance(position +1);
+        }
+        //return CommsFragment.newInstance(position +1);
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        //return mContext.getResources().getString(TAB_TITLES[position]);
-        return mContext.getResources().getString(TAB_TITLES[0]);
+        return mContext.getResources().getString(TAB_TITLES[position]);
+        //return mContext.getResources().getString(TAB_TITLES[0]);
     }
 
     @Override
     public int getCount() {
         // Show 3 total pages.
-        //return 3;
-        return 1;
+        return 3;
+        //return 1;
     }
 }

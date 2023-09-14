@@ -22,7 +22,7 @@ public class CommsAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return 3;
     }
 
 }

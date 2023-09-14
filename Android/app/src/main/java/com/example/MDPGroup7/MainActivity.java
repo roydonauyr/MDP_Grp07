@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,10 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.MDPGroup7.ui.main.BluetoothConnectionService;
-import com.example.MDPGroup7.ui.main.BluetoothPopUp;
-import com.example.MDPGroup7.ui.main.CommsAdapter;
-import com.example.MDPGroup7.ui.main.CommsFragment;
+import com.example.MDPGroup7.ui.main.*;
 import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
@@ -40,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private static SharedPreferences.Editor editor;
     private static Context context;
 
-    //private static GridMap gridMap;
+    private static GridMap gridMap;
     static TextView xAxisTextView, yAxisTextView, directionAxisTextView;
     static TextView robotStatusTextView;
     static Button f1, f2;
     Button reconfigure;
-    //ReconfigureFragment reconfigureFragment = new ReconfigureFragment();
+    ReconfigureFragment reconfigureFragment = new ReconfigureFragment();
 
     BluetoothConnectionService mBluetoothConnection;
     BluetoothDevice mBTDevice;
@@ -60,9 +58,9 @@ public class MainActivity extends AppCompatActivity {
         // Initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CommsAdapter commsAdapter = new CommsAdapter(this, getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(commsAdapter);
+        viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setOffscreenPageLimit(9999);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("connStatus", "Disconnected");
         editor.commit();
 
-        /*Button printMDFStringButton = (Button) findViewById(R.id.printMDFString);
+        Button printMDFStringButton = (Button) findViewById(R.id.printMDFString);
         printMDFStringButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.commit();
                 refreshMessageReceived();
             }
-        });*/
+        });
 
         // Toolbar
         Button bluetoothButton = (Button) findViewById(R.id.bluetoothButton);
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(popup);
             }
         });
-        /*Button mapInformationButton = (Button) findViewById(R.id.mapInfoButton);
+        Button mapInformationButton = (Button) findViewById(R.id.mapInfoButton);
         mapInformationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,18 +108,18 @@ public class MainActivity extends AppCompatActivity {
                 Intent popup = new Intent(MainActivity.this, MapInformation.class);
                 startActivity(popup);
             }
-        });*/
+        });
 
 
         // Map
-        /*gridMap = new GridMap(this);
+        gridMap = new GridMap(this);
         gridMap = findViewById(R.id.mapView);
         xAxisTextView = findViewById(R.id.xAxisTextView);
         yAxisTextView = findViewById(R.id.yAxisTextView);
-        directionAxisTextView = findViewById(R.id.directionAxisTextView);*/
+        directionAxisTextView = findViewById(R.id.directionAxisTextView);
 
         // Robot Status
-        /*robotStatusTextView = findViewById(R.id.robotStatusTextView);
+        robotStatusTextView = findViewById(R.id.robotStatusTextView);
 
         myDialog = new ProgressDialog(MainActivity.this);
         myDialog.setMessage("Waiting for other device to reconnect...");
@@ -175,16 +173,16 @@ public class MainActivity extends AppCompatActivity {
                 reconfigureFragment.show(getFragmentManager(), "Reconfigure Fragment");
                 showLog("Exiting reconfigureBtn");
             }
-        });*/
+        });
     }
 
     public static Button getF1() { return f1; }
 
     public static Button getF2() { return f2; }
 
-    /*public static GridMap getGridMap() {
+    public static GridMap getGridMap() {
         return gridMap;
-    }*/
+    }
 
     public static TextView getRobotStatusTextView() {  return robotStatusTextView; }
 
@@ -242,17 +240,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*public void refreshDirection(String direction) {
+    public void refreshDirection(String direction) {
         gridMap.setRobotDirection(direction);
         directionAxisTextView.setText(sharedPreferences.getString("direction",""));
         printMessage("Direction is set to " + direction);
-    }*/
+    }
 
-    /*public static void refreshLabel() {
+    public static void refreshLabel() {
         xAxisTextView.setText(String.valueOf(gridMap.getCurCoord()[0]-1));
         yAxisTextView.setText(String.valueOf(gridMap.getCurCoord()[1]-1));
         directionAxisTextView.setText(sharedPreferences.getString("direction",""));
-    }*/
+    }
 
     public static void receiveMessage(String message) {
         showLog("Entering receiveMessage");
@@ -360,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                 showLog("Adding Image Failed");
             }
 
-            /*if (gridMap.getAutoUpdate() || MapTabFragment.manualUpdateRequest) {
+            if (gridMap.getAutoUpdate() || MapTabFragment.manualUpdateRequest) {
                 try {
                     gridMap.setReceivedJsonObject(new JSONObject(message));
                     gridMap.updateMapInformation();
@@ -369,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     showLog("messageReceiver: try decode unsuccessful");
                 }
-            }*/
+            }
             sharedPreferences();
             String receivedText = sharedPreferences.getString("message", "") + "\n" + message;
             editor.putString("message", receivedText);

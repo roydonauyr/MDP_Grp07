@@ -1,0 +1,14 @@
+androidx/test/core/R.java
+ androidx.test.core.R
+androidx/test/espresso/R.java
+ androidx.test.espresso.R
+com/example/mdp_android_grp07/test/R.java
+ com.example.mdp_android_grp07.test.R
+com/example/MDPGroup7/ExampleInstrumentedTest.java
+ com.example.MDPGroup7.ExampleInstrumentedTest
+androidx/test/ext/junit/R.java
+ androidx.test.ext.junit.R
+androidx/test/R.java
+ androidx.test.R
+com/example/mdp_android_grp07/test/BuildConfig.java
+ com.example.mdp_android_grp07.test.BuildConfig
