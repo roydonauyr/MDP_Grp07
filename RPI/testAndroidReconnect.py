@@ -1,6 +1,7 @@
-from RPI.Communication.android import Android, AndroidMessage
+from Communication.android import Android, AndroidMessage
 from multiprocessing import Process, Manager
 from typing import Optional
+import time
 
 def reconnect_android():
         """
@@ -10,13 +11,13 @@ def reconnect_android():
 
         print("Reconnection handler is watching\n")
         #self.logger.info("Reconnection handler is watching...")
-
+        
         # Clean up old sockets
         android.disconnect()
 
         # Reconnect
         android.connect()
-
+     
 
         print("Android processess successfully restarted")
         #self.logger.info("Android child processes restarted")
@@ -27,8 +28,10 @@ if __name__ == "__main__":
     android.connect()
     while True:
         try:
-             android.send({"type": "action", "value": "start test"})
+             time.sleep(20)
+             #print("Connected")
+             android.send(AndroidMessage('action', "Start test"))
         except OSError as e:
              print("Disconnected")
              reconnect_android()
-             android.send({"type": "general", "value": "reconnected"})
+             android.send(AndroidMessage('general', "Reconnected."))
