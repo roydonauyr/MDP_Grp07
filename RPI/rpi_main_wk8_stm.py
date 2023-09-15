@@ -6,11 +6,11 @@ from typing import Optional
 import os
 #import requests
 
-from RPI.Communication.android import Android, AndroidMessage 
-from RPI.Communication.stm import STM
-from RPI.Others.const import SYMBOL_MAPPING
+from Communication.android import Android, AndroidMessage 
+from Communication.stm import STM
+from Others.const import SYMBOL_MAPPING
 #from logger import prepare_logger
-from RPI.Others.configuration import API_IP, API_PORT
+from Others.configuration import API_IP, API_PORT
 
 class RPiAction:
     """

@@ -371,7 +371,8 @@ class RaspberryPi:
             if action.type == "obstacles":
                 for obs in action.value['obstacles']:
                     self.obstacles[obs['id']] = obs
-                self.request_algo(action.value) # Send the whole dict into request_algo, including mode
+                    print(f"Obstacle {obs['id']}: {obs}")
+                #self.request_algo(action.value) # Send the whole dict into request_algo, including mode
             elif action.type == "cap":
                 print("capture image")
                 #self.cap_and_rec(obstacle_id_with_signal=action.value)

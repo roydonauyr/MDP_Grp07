@@ -73,7 +73,7 @@ class STM(Link):
         return message
     
     def stmTest(self):
-        self.send("R")
+        self.send("RF360")
         while True:
             message: str = self.receive()
             if message != None:
