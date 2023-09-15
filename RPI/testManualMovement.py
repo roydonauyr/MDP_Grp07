@@ -198,19 +198,19 @@ class RaspberryPi:
                 if(message['value'] == "up"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Forward"))
-                    self.stm.send("FW03")
+                    self.stm.send("SF010")
                 elif(message['value'] == "down"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Backward"))
-                    self.stm.send("BW03")
+                    self.stm.send("SB010")
                 elif(message['value'] == "left"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Left"))
-                    self.stm.send("L3")
+                    self.stm.send("LF090")
                 elif(message['value'] == "right"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Right"))
-                    self.stm.send("r3")
+                    self.stm.send("RF090")
 
     def receive_stm(self) -> None:
         """
@@ -219,13 +219,13 @@ class RaspberryPi:
         while True:
 
             message: str = self.stm.receive()
-
+            print(message)
             if message.startswith("ACK"):
-                if self.ack_flag == False:
-                    self.ack_flag = True
-                    print("ACK for reset command for STM received")
-                    #self.logger.debug("ACK for RS00 from STM32 received.")
-                    continue
+                # if self.ack_flag == False:
+                #     self.ack_flag = True
+                #     print("ACK for reset command for STM received")
+                #     #self.logger.debug("ACK for RS00 from STM32 received.")
+                #     continue
                 try:
                     self.movement_lock.release()
                     print("ACK from STM received, movement lock released")

@@ -12,6 +12,7 @@ def check_api() -> bool:
         url = f"http://{API_IP}:{API_PORT}/status"
         try:
             response = requests.get(url, timeout=1)
+            print(response)
             if response.status_code == 200:
                 print("API is up!\n")
                 #self.logger.debug("API is up!")
@@ -76,3 +77,4 @@ if __name__ == "__main__":
                 "obstacles": [{"x": 5, "y": 10, "id": 1, "d": 2}],
                 "mode": "0"
             })
+            break
