@@ -67,13 +67,15 @@ class STM(Link):
         Returns:
             Optional[str]: message received
         """
-        message = self.serial.readline().strip().decode("utf-8")
+        #message = self.serial.readline().strip().decode("utf-8")
+        print(self.serial)
+        message = str(self.serial.read(10).decode("utf-8", errors="ignore"))
         print("Message received from stm: %s", str(message))
         #self.logger.debug(f"Received from STM32: {message}")
         return message
     
     def stmTest(self):
-        self.send("RF360")
+        self.send("SF010")
         while True:
             message: str = self.receive()
             if message != None:

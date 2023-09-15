@@ -42,8 +42,10 @@ def capture():
     cv2.destroyAllWindows()
 
 # Model path
-model_weights = Path("C:\\Users\\roydo\\Downloads\\task1_best_noFlip.pt")
-model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model
+#model_weights = Path("C:\\Users\\roydo\\Downloads\\task1_best_noFlip.pt")
+model_weights = Path("C:\\Users\\roydo\\Downloads\\best.pt")
+#model = torch.hub.load('ultralytics/ultralytics:master', 'custom', path=model_weights)
+#model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model
 
 # Access the webcam feed
 cap = cv2.VideoCapture()  # 0 for the default camera, you can specify a different camera if needed

@@ -131,12 +131,15 @@ class Android(Link):
             os.system("sudo hciconfig hci0 piscan")
             
             # Initialize server socket
+            port = 1
             self.server_socket = bt.BluetoothSocket(bt.RFCOMM)
-            self.server_socket.bind((self.hostId, bt.PORT_ANY))
+            self.server_socket.bind((self.hostId, port))
+            #self.server_socket.bind((self.hostId, bt.PORT_ANY))
             self.server_socket.listen(1)
 
             # Parameters
-            port = self.server_socket.getsockname()[1]
+            #port = self.server_socket.getsockname()[1]
+            
 
             # Advertise
             bt.advertise_service(self.server_socket, "MDP-Group7-RPi", service_id=self.uuid, service_classes=[
@@ -144,7 +147,7 @@ class Android(Link):
 
             # self.logger.info(
             #     f"Awaiting Bluetooth connection on RFCOMM CHANNEL {port}")
-            print("Awaiting bluetooth connection on port: %d", str(port))
+            print("Awaiting bluetooth connection on port: %d", port)
             self.client_socket, client_address = self.server_socket.accept()
             #self.logger.info(f"Accepted connection from: {client_address}")
             print("Accepted connection from client address of: %s", str(client_address))
