@@ -39,7 +39,7 @@ class MazeSolver:
         Args:
             x (int): x coordinate of obstacle
             y (int): y coordinate of obstacle
-            direction (Direction): Direction of obstacle
+            direction (Direction): Facing of the obstacle
             obstacle_id (int): ID of obstacle
         """
         # Create an obstacle object
@@ -55,23 +55,21 @@ class MazeSolver:
         """Compute the L-n distance between two coordinates
 
         Args:
-            x1 (int)
-            y1 (int)
-            x2 (int)
-            y2 (int)
-            level (int, optional): L-n distance to compute. Defaults to 1.
+            x1 (int), y1 (int): Coordinates of the first point
+            x2 (int), y2 (int): Coordinates of the second point
+            level (int, optional): The type of L-n norm to compute. Defaults to 1 (Manhattan distance). Level 2 is Euclidean distance.
 
         Returns:
-            float: L-n distance between the two given points
+            float: The computed L-n distance between the two points
         """
-        horizontal_distance = x1 - x2
-        vertical_distance = y1 - y2
+        horizontal_dist = x1 - x2
+        vertical_dist = y1 - y2
 
         # Euclidean distance
         if level == 2:
-            return math.sqrt(horizontal_distance ** 2 + vertical_distance ** 2)
+            return math.sqrt(horizontal_dist ** 2 + vertical_dist ** 2)
 
-        return abs(horizontal_distance) + abs(vertical_distance)
+        return abs(horizontal_dist) + abs(vertical_dist)
 
     @staticmethod
     def compute_state_distance(start_state: CellState, end_state: CellState, level=1):
@@ -187,6 +185,21 @@ class MazeSolver:
 
     @staticmethod
     def generate_combination(view_positions, index, current, result, iteration_left):
+        """
+        Generate all possible combinations of view positions up to a given limit of iterations.
+
+        This method uses recursion to explore all possible combinations. It is part of a backtracking algorithm.
+
+        Args:
+            view_positions (List[List[int]]): A list of lists where each inner list contains possible positions at a specific index.
+            index (int): The current index of view_positions to consider.
+            current (List[int]): The current combination of positions being generated.
+            result (List[List[int]]): A list that will store all generated combinations.
+            iteration_left ([int]): A list with a single integer, representing the remaining number of iterations allowed.
+
+        Returns:
+            None: The result list will be modified in-place to include the generated combinations.
+        """
         if index == len(view_positions):
             result.append(current[:])
             return
