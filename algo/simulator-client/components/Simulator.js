@@ -19,6 +19,9 @@ const DirectionToString = {
   8: "None",
 }
 
+const FORWARD_TIME = 1
+const TURN_TIME = 1.5
+
 const transformCoord = (x, y) => {
   return { x: 19 - y, y: x }
 }
@@ -40,7 +43,8 @@ export default function Simulator() {
   const [commands, setCommands] = useState([]);
   const [page, setPage] = useState(0);
   const [robotPos, setRobotPos] = useState( {x: 1, y:1, angle:0})
-  
+  const [time, setTime] = useState(0)
+
   const generateRandID = () => {
     while (true) {
       // generate random id
@@ -145,6 +149,7 @@ export default function Simulator() {
     setPage(0)
     setObstacles([])
     setIsGettingPath(false)
+    setTime(0)
   }
 
   const onRemoveObstacle = (ob) => {
@@ -159,6 +164,28 @@ export default function Simulator() {
     }
     // Set the obstacles to the new array
     setObstacles(newObstacles)
+  }
+
+  const getTime = (commands) => {
+    let newTime = time
+
+    for (let x of commands) {
+      console.log(x)
+      if (x.startsWith("FW") || x.startsWith("BW")) {
+        // console.log(x[2])
+        newTime += FORWARD_TIME * x[2];
+        // console.log(newTime)
+      }
+      else if (x.startsWith("BR") || x.startsWith("BL") || x.startsWith("FR") || x.startsWith("FL")) {
+        newTime += TURN_TIME;
+        // console.log(newTime)
+      }
+      else {
+        continue
+      }
+    }
+
+    setTime(newTime);
   }
 
   const getPath = () => {
@@ -177,6 +204,8 @@ export default function Simulator() {
           commands.push(x)
         }
         setCommands(commands)
+        getTime(commands);
+        console.log(commands);
       }
 
       setIsGettingPath(false)
@@ -459,6 +488,9 @@ export default function Simulator() {
           </button>
         </div>
       )}
+      <div className="badge flex flex-row text-black bg-sky-100 rounded-xl text-xs md:text-sm h-max w-max border-cyan-500">
+        Time taken: {time} sec
+      </div>
       </div>
     </div>
   )
