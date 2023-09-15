@@ -71,3 +71,11 @@ class STM(Link):
         print("Message received from stm: %s", str(message))
         #self.logger.debug(f"Received from STM32: {message}")
         return message
+    
+    def stmTest(self):
+        self.send("RF360")
+        while True:
+            message: str = self.receive()
+            if message != None:
+                print(message)
+                break
