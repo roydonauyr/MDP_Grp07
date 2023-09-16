@@ -181,8 +181,10 @@ androidx/drawerlayout/R.java
  androidx.drawerlayout.R$styleable
 androidx/versionedparcelable/R.java
  androidx.versionedparcelable.R
-com/example/MDPGroup7/ui/main/SectionsPagerAdapter.java
- com.example.MDPGroup7.ui.main.SectionsPagerAdapter
+com/example/MDPGroup7/ui/main/DirectionFragment.java
+ com.example.MDPGroup7.ui.main.DirectionFragment
+ com.example.MDPGroup7.ui.main.DirectionFragment$1
+ com.example.MDPGroup7.ui.main.DirectionFragment$2
 androidx/lifecycle/viewmodel/R.java
  androidx.lifecycle.viewmodel.R
 com/example/MDPGroup7/BuildConfig.java
@@ -427,7 +429,5 @@ com/example/MDPGroup7/ui/main/MapTabFragment.java
  com.example.MDPGroup7.ui.main.MapTabFragment$7
  com.example.MDPGroup7.ui.main.MapTabFragment$8
  com.example.MDPGroup7.ui.main.MapTabFragment$9
-com/example/MDPGroup7/ui/main/DirectionFragment.java
- com.example.MDPGroup7.ui.main.DirectionFragment
- com.example.MDPGroup7.ui.main.DirectionFragment$1
- com.example.MDPGroup7.ui.main.DirectionFragment$2
+com/example/MDPGroup7/ui/main/SectionsPagerAdapter.java
+ com.example.MDPGroup7.ui.main.SectionsPagerAdapter

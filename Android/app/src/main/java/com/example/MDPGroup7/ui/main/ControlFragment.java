@@ -153,7 +153,7 @@ public class ControlFragment extends Fragment implements SensorEventListener {
                         updateStatus("moving forward");
                     else
                         updateStatus("Unable to move forward");
-                    MainActivity.printMessage("W1|");
+                    MainActivity.printMessage("{\"type\": \"command\", \"value\": \"up\"}");
                 }
                 else
                     updateStatus("Please press 'STARTING POINT'");
@@ -170,7 +170,7 @@ public class ControlFragment extends Fragment implements SensorEventListener {
                 else if (gridMap.getCanDrawRobot() && !gridMap.getAutoUpdate()) {
                     gridMap.moveRobot("right");
                     MainActivity.refreshLabel();
-                    MainActivity.printMessage("D|");
+                    MainActivity.printMessage("{\"type\": \"command\", \"value\": \"right\"}");
                 }
                 else
                     updateStatus("Please press 'STARTING POINT'");
@@ -191,7 +191,7 @@ public class ControlFragment extends Fragment implements SensorEventListener {
                         updateStatus("moving backward");
                     else
                         updateStatus("Unable to move backward");
-                    MainActivity.printMessage("S1|");
+                    MainActivity.printMessage("{\"type\": \"command\", \"value\": \"down\"}");
                 }
                 else
                     updateStatus("Please press 'STARTING POINT'");
@@ -209,7 +209,7 @@ public class ControlFragment extends Fragment implements SensorEventListener {
                     gridMap.moveRobot("left");
                     MainActivity.refreshLabel();
                     updateStatus("turning left");
-                    MainActivity.printMessage("A|");
+                    MainActivity.printMessage("{\"type\": \"command\", \"value\": \"left\"}");
                 }
                 else
                     updateStatus("Please press 'STARTING POINT'");
