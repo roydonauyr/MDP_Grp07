@@ -47,25 +47,27 @@ def path_finding():
     
     # Based on the shortest path, generate commands for the robot
     commands = command_generator(optimal_path, obstacles)
-
+    # print(commands)
+    # print(len(optimal_path))
     # Get the starting location and add it to path_results
     path_results = [optimal_path[0].get_dict()]
     # Process each command individually and append the location the robot should be after executing that command to path_results
     i = 0
     for command in commands:
-        if command.startswith("SNAP"):
+        if command.startswith("CAP"):
             continue
         if command.startswith("FIN"):
             continue
-        elif command.startswith("FW") or command.startswith("FS"):
+        elif command.startswith("SF") or command.startswith("FS"):
             i += int(command[2:]) // 10
-        elif command.startswith("BW") or command.startswith("BS"):
+            print(int(command[2:]))
+        elif command.startswith("SB") or command.startswith("BS"):
             i += int(command[2:]) // 10
         else:
             i += 1
         path_results.append(optimal_path[i].get_dict())
-        # print(path_results)
-        # print(commands)
+        print(path_results)
+        print(commands)
         
     return jsonify({
         "data": {
