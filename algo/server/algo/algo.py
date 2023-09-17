@@ -135,7 +135,7 @@ class MazeSolver:
             self.path_cost_generator(items)
             combination = []
             self.generate_combination(cur_view_positions, 0, [], combination, [ITERATIONS])
-
+            
             for c in combination: # run the algo some times ->
                 visited_candidates = [0] # add the start state of the robot
 
@@ -180,7 +180,6 @@ class MazeSolver:
             if optimal_path:
                 # if found optimal path, return
                 break
-
         return optimal_path, distance
 
     @staticmethod
@@ -433,11 +432,13 @@ class MazeSolver:
                         parent[(next_x, next_y, new_direction)] = (cur_x, cur_y, cur_direction)
 
                         heapq.heappush(heap, (next_cost, next_x, next_y, new_direction))
-
+        
         # Nested loop through all the state pairings
         for i in range(len(states) - 1):
             for j in range(i + 1, len(states)):
                 astar_search(states[i], states[j])
+
+
 
 if __name__ == "__main__":
     pass

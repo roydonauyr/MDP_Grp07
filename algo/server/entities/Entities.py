@@ -10,7 +10,7 @@ class CellState:
         self.x = x
         self.y = y
         self.direction = direction
-        # If screenshot_od != -1, the snapshot is taken at that position is for the obstacle with id = screenshot_id
+        # If screenshot_id != -1, the snapshot is taken at that position is for the obstacle with id = screenshot_id
         self.screenshot_id = screenshot_id
         self.penalty = penalty  # Penalty for the view point of taking picture
 
@@ -57,6 +57,7 @@ class CellState:
             dict: {x,y,direction,screeshot_id}
         """
         return {'x': self.x, 'y': self.y, 'd': self.direction, 's': self.screenshot_id}
+    
 
 
 class Obstacle(CellState):

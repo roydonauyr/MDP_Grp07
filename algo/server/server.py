@@ -45,6 +45,20 @@ def path_finding():
     print(f"Time taken to find shortest path using A* search: {time.time() - start}s")
     print(f"Distance to travel: {distance} units")
     
+    # Get shortest path to return back for parking
+    start_position = optimal_path[0]  # Actual start position
+    end_position = optimal_path[-1]  # Actual end position
+    start_end = (end_position, start_position)
+    path_home = ""
+    if maze_solver.path_table.items():
+        for key, value in maze_solver.path_table.items():
+            if str(key) == str(start_end):
+                path_home = value
+        return_path = []
+        for coord in range(1, len(path_home)):
+            return_path.append(CellState(path_home[coord][0], path_home[coord][1], path_home[coord][2], -1))
+        optimal_path.extend(return_path)
+        
     # Based on the shortest path, generate commands for the robot
     commands = command_generator(optimal_path, obstacles)
     # print(commands)
@@ -66,8 +80,8 @@ def path_finding():
         else:
             i += 1
         path_results.append(optimal_path[i].get_dict())
-        print(path_results)
-        print(commands)
+        #print(path_results)
+        #print(commands)
         
     return jsonify({
         "data": {
