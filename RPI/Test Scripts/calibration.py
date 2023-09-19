@@ -29,14 +29,17 @@ class RaspberryPi:
         # Locks
         self.movement_lock = self.manager.Lock()
 
+        # Event set
+        self.unpause = self.manager.Event()
+
         # Queues
         self.command_queue = self.manager.Queue() # Commands from algorithm to be processed by STM
         self.path_queue = self.manager.Queue() # X,Y,d Coordinates of the robot after execution of the command
 
         # Create processes
+        self.process_start_stream = None
         self.process_receive_stm = None
         self.process_command_execute = None
-        #self.ack_flag = False
 
         # Lists
         self.obstacles = self.manager.dict() # Dictionary of obstacles
@@ -58,10 +61,12 @@ class RaspberryPi:
             })
 
             # Initializing child processes
+            self.process_start_stream = Process(target=self.pc.camera_stream)
             self.process_receive_stm = Process(target=self.receive_stm)
             self.process_command_execute = Process(target=self.command_execute)
 
             # Start processes
+            self.process_start_stream.start()
             self.process_receive_stm.start() # Receive from STM (ACK)
             self.process_command_execute.start() # Commands to Send Out To STM
 
@@ -186,13 +191,14 @@ class RaspberryPi:
     def cap_and_rec(self) -> None:
         # Capture image
     
-        print(f"Turn on video stream for obstacle")
+        print(f"Get Ready To Capture Image")
        
         try:
-            results = self.pc.camera_cap()
-            print(f"Results: {results}")
+            self.pc.send("Image Rec Start")
+            results = self.pc.camera_cap() 
+            print(results)
         except Exception as e:
-            print("Error in api: %s\n", str(e))
+            print("Error in sending/receiving message: %s\n", str(e))
 
         # release lock so that bot can continue moving
         self.movement_lock.release()
