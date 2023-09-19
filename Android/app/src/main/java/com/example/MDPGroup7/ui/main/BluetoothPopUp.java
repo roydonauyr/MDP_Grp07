@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,16 +19,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.example.MDPGroup7.MainActivity;
 import com.example.MDPGroup7.R;
 
 import java.util.ArrayList;
@@ -53,7 +51,7 @@ public class BluetoothPopUp extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
-    com.example.MDPGroup7.ui.main.BluetoothConnectionService mBluetoothConnection;
+    BluetoothConnectionService mBluetoothConnection;
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     public static BluetoothDevice mBTDevice;
 
@@ -65,7 +63,7 @@ public class BluetoothPopUp extends AppCompatActivity {
         public void run() {
             // Magic here
             try {
-                if (com.example.MDPGroup7.ui.main.BluetoothConnectionService.BluetoothConnectionStatus == false) {
+                if (BluetoothConnectionService.BluetoothConnectionStatus == false) {
                     startBTConnection(mBTDevice, myUUID);
                     Toast.makeText(BluetoothPopUp.this, "Reconnection Success", Toast.LENGTH_SHORT).show();
 
@@ -91,7 +89,7 @@ public class BluetoothPopUp extends AppCompatActivity {
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Switch bluetoothSwitch = (Switch) findViewById(R.id.bluetoothSwitch);
-        if (mBluetoothAdapter.isEnabled()) {
+        if(mBluetoothAdapter.isEnabled()){
             bluetoothSwitch.setChecked(true);
             bluetoothSwitch.setText("ON");
         }
@@ -125,7 +123,7 @@ public class BluetoothPopUp extends AppCompatActivity {
                     Log.d(TAG, "onItemClick: Initiating pairing with " + deviceName);
                     mNewBTDevices.get(i).createBond();
 
-                    mBluetoothConnection = new com.example.MDPGroup7.ui.main.BluetoothConnectionService(BluetoothPopUp.this);
+                    mBluetoothConnection = new BluetoothConnectionService(BluetoothPopUp.this);
                     mBTDevice = mNewBTDevices.get(i);
                 }
             }
@@ -143,7 +141,7 @@ public class BluetoothPopUp extends AppCompatActivity {
                 Log.d(TAG, "onItemClick: DEVICE NAME: " + deviceName);
                 Log.d(TAG, "onItemClick: DEVICE ADDRESS: " + deviceAddress);
 
-                mBluetoothConnection = new com.example.MDPGroup7.ui.main.BluetoothConnectionService(BluetoothPopUp.this);
+                mBluetoothConnection = new BluetoothConnectionService(BluetoothPopUp.this);
                 mBTDevice = mPairedBTDevices.get(i);
             }
         });
@@ -170,7 +168,7 @@ public class BluetoothPopUp extends AppCompatActivity {
                         Log.d(TAG, "enableDisableBT: Making device discoverable for 600 seconds.");
 
                         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 600);
+                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 5);
                         startActivity(discoverableIntent);
 
                         compoundButton.setChecked(true);
@@ -206,7 +204,7 @@ public class BluetoothPopUp extends AppCompatActivity {
         });
 
 
-        ImageButton backBtn = findViewById(R.id.backBtn);
+        Button backBtn = findViewById(R.id.backBtn);
 
         connStatusTextView = (TextView) findViewById(R.id.connStatusTextView);
         connStatus ="Disconnected";
@@ -222,6 +220,9 @@ public class BluetoothPopUp extends AppCompatActivity {
                 editor = sharedPreferences.edit();
                 editor.putString("connStatus", connStatusTextView.getText().toString());
                 editor.commit();
+                TextView status = MainActivity.getBluetoothStatus();
+                String s = connStatusTextView.getText().toString();
+                //status.setText(s);
                 finish();
             }
         });
@@ -394,11 +395,12 @@ public class BluetoothPopUp extends AppCompatActivity {
                 Toast.makeText(BluetoothPopUp.this, "Device now connected to "+mDevice.getName(), Toast.LENGTH_LONG).show();
                 editor.putString("connStatus", "Connected to " + mDevice.getName());
                 connStatusTextView.setText("Connected to " + mDevice.getName());
+
             }
             else if(status.equals("disconnected") && retryConnection == false){
                 Log.d(TAG, "mBroadcastReceiver5: Disconnected from "+mDevice.getName());
                 Toast.makeText(BluetoothPopUp.this, "Disconnected from "+mDevice.getName(), Toast.LENGTH_LONG).show();
-                mBluetoothConnection = new com.example.MDPGroup7.ui.main.BluetoothConnectionService(BluetoothPopUp.this);
+                mBluetoothConnection = new BluetoothConnectionService(BluetoothPopUp.this);
 //                mBluetoothConnection.startAcceptThread();
 
 
@@ -430,6 +432,7 @@ public class BluetoothPopUp extends AppCompatActivity {
         Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection");
 
         mBluetoothConnection.startClientThread(device, uuid);
+
     }
 
     @Override

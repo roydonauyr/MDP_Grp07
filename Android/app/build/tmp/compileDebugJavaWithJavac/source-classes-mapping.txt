@@ -29,14 +29,14 @@ com/example/MDPGroup7/ui/main/MapInformation.java
  com.example.MDPGroup7.ui.main.MapInformation$1
 androidx/lifecycle/livedata/core/R.java
  androidx.lifecycle.livedata.core.R
+com/example/MDPGroup7/ui/main/DeviceListAdapter.java
+ com.example.MDPGroup7.ui.main.DeviceListAdapter
 com/example/MDPGroup7/ui/main/BluetoothConnectionService.java
  com.example.MDPGroup7.ui.main.BluetoothConnectionService
  com.example.MDPGroup7.ui.main.BluetoothConnectionService$AcceptThread
  com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectThread
  com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectThread$1
  com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectedThread
-com/example/MDPGroup7/ui/main/DeviceListAdapter.java
- com.example.MDPGroup7.ui.main.DeviceListAdapter
 androidx/appcompat/resources/R.java
  androidx.appcompat.resources.R
  androidx.appcompat.resources.R$attr
@@ -66,6 +66,8 @@ androidx/fragment/R.java
  androidx.fragment.R$styleable
 androidx/savedstate/R.java
  androidx.savedstate.R
+com/example/MDPGroup7/Constants.java
+ com.example.MDPGroup7.Constants
 com/example/MDPGroup7/R.java
  com.example.MDPGroup7.R
  com.example.MDPGroup7.R$anim
@@ -80,11 +82,11 @@ com/example/MDPGroup7/R.java
  com.example.MDPGroup7.R$integer
  com.example.MDPGroup7.R$interpolator
  com.example.MDPGroup7.R$layout
+ com.example.MDPGroup7.R$menu
  com.example.MDPGroup7.R$mipmap
  com.example.MDPGroup7.R$string
  com.example.MDPGroup7.R$style
  com.example.MDPGroup7.R$styleable
- com.example.MDPGroup7.R$xml
 androidx/asynclayoutinflater/R.java
  androidx.asynclayoutinflater.R
  androidx.asynclayoutinflater.R$attr
@@ -97,18 +99,10 @@ androidx/asynclayoutinflater/R.java
  androidx.asynclayoutinflater.R$string
  androidx.asynclayoutinflater.R$style
  androidx.asynclayoutinflater.R$styleable
-androidx/viewpager/R.java
- androidx.viewpager.R
- androidx.viewpager.R$attr
- androidx.viewpager.R$color
- androidx.viewpager.R$dimen
- androidx.viewpager.R$drawable
- androidx.viewpager.R$id
- androidx.viewpager.R$integer
- androidx.viewpager.R$layout
- androidx.viewpager.R$string
- androidx.viewpager.R$style
- androidx.viewpager.R$styleable
+com/example/MDPGroup7/ui/main/DirectionFragment.java
+ com.example.MDPGroup7.ui.main.DirectionFragment
+ com.example.MDPGroup7.ui.main.DirectionFragment$1
+ com.example.MDPGroup7.ui.main.DirectionFragment$2
 androidx/interpolator/R.java
  androidx.interpolator.R
 com/google/android/gms/maps/R.java
@@ -156,9 +150,6 @@ androidx/recyclerview/R.java
  androidx.recyclerview.R$string
  androidx.recyclerview.R$style
  androidx.recyclerview.R$styleable
-com/example/MDPGroup7/ui/main/CommsFragment.java
- com.example.MDPGroup7.ui.main.CommsFragment
- com.example.MDPGroup7.ui.main.CommsFragment$1
 com/google/android/gms/base/R.java
  com.google.android.gms.base.R
  com.google.android.gms.base.R$attr
@@ -181,10 +172,21 @@ androidx/drawerlayout/R.java
  androidx.drawerlayout.R$styleable
 androidx/versionedparcelable/R.java
  androidx.versionedparcelable.R
-com/example/MDPGroup7/ui/main/DirectionFragment.java
- com.example.MDPGroup7.ui.main.DirectionFragment
- com.example.MDPGroup7.ui.main.DirectionFragment$1
- com.example.MDPGroup7.ui.main.DirectionFragment$2
+androidx/vectordrawable/animated/R.java
+ androidx.vectordrawable.animated.R
+ androidx.vectordrawable.animated.R$attr
+ androidx.vectordrawable.animated.R$color
+ androidx.vectordrawable.animated.R$dimen
+ androidx.vectordrawable.animated.R$drawable
+ androidx.vectordrawable.animated.R$id
+ androidx.vectordrawable.animated.R$integer
+ androidx.vectordrawable.animated.R$layout
+ androidx.vectordrawable.animated.R$string
+ androidx.vectordrawable.animated.R$style
+ androidx.vectordrawable.animated.R$styleable
+com/example/MDPGroup7/ui/main/BluetoothChatFragment.java
+ com.example.MDPGroup7.ui.main.BluetoothChatFragment
+ com.example.MDPGroup7.ui.main.BluetoothChatFragment$1
 androidx/lifecycle/viewmodel/R.java
  androidx.lifecycle.viewmodel.R
 com/example/MDPGroup7/BuildConfig.java
@@ -255,18 +257,8 @@ androidx/appcompat/R.java
  androidx.appcompat.R$styleable
 androidx/lifecycle/livedata/R.java
  androidx.lifecycle.livedata.R
-androidx/vectordrawable/animated/R.java
- androidx.vectordrawable.animated.R
- androidx.vectordrawable.animated.R$attr
- androidx.vectordrawable.animated.R$color
- androidx.vectordrawable.animated.R$dimen
- androidx.vectordrawable.animated.R$drawable
- androidx.vectordrawable.animated.R$id
- androidx.vectordrawable.animated.R$integer
- androidx.vectordrawable.animated.R$layout
- androidx.vectordrawable.animated.R$string
- androidx.vectordrawable.animated.R$style
- androidx.vectordrawable.animated.R$styleable
+com/example/MDPGroup7/ui/main/SectionsPagerAdapter.java
+ com.example.MDPGroup7.ui.main.SectionsPagerAdapter
 androidx/legacy/coreui/R.java
  androidx.legacy.coreui.R
  androidx.legacy.coreui.R$attr
@@ -300,8 +292,6 @@ androidx/customview/R.java
  androidx.customview.R$string
  androidx.customview.R$style
  androidx.customview.R$styleable
-com/google/android/gms/tasks/R.java
- com.google.android.gms.tasks.R
 androidx/loader/R.java
  androidx.loader.R
  androidx.loader.R$attr
@@ -376,40 +366,121 @@ com/example/MDPGroup7/ui/main/BluetoothPopUp.java
  com.example.MDPGroup7.ui.main.BluetoothPopUp$7
  com.example.MDPGroup7.ui.main.BluetoothPopUp$8
  com.example.MDPGroup7.ui.main.BluetoothPopUp$9
-androidx/localbroadcastmanager/R.java
- androidx.localbroadcastmanager.R
+com/google/android/gms/tasks/R.java
+ com.google.android.gms.tasks.R
 androidx/lifecycle/process/R.java
  androidx.lifecycle.process.R
 androidx/lifecycle/service/R.java
  androidx.lifecycle.service.R
+androidx/viewpager/R.java
+ androidx.viewpager.R
+ androidx.viewpager.R$attr
+ androidx.viewpager.R$color
+ androidx.viewpager.R$dimen
+ androidx.viewpager.R$drawable
+ androidx.viewpager.R$id
+ androidx.viewpager.R$integer
+ androidx.viewpager.R$layout
+ androidx.viewpager.R$string
+ androidx.viewpager.R$style
+ androidx.viewpager.R$styleable
+androidx/localbroadcastmanager/R.java
+ androidx.localbroadcastmanager.R
 com/example/MDPGroup7/MainActivity.java
  com.example.MDPGroup7.MainActivity
  com.example.MDPGroup7.MainActivity$1
  com.example.MDPGroup7.MainActivity$2
  com.example.MDPGroup7.MainActivity$3
  com.example.MDPGroup7.MainActivity$4
- com.example.MDPGroup7.MainActivity$5
- com.example.MDPGroup7.MainActivity$6
- com.example.MDPGroup7.MainActivity$7
- com.example.MDPGroup7.MainActivity$8
- com.example.MDPGroup7.MainActivity$9
 com/example/MDPGroup7/ui/main/GridMap.java
  com.example.MDPGroup7.ui.main.GridMap
  com.example.MDPGroup7.ui.main.GridMap$1
+ com.example.MDPGroup7.ui.main.GridMap$10
+ com.example.MDPGroup7.ui.main.GridMap$11
+ com.example.MDPGroup7.ui.main.GridMap$12
+ com.example.MDPGroup7.ui.main.GridMap$13
+ com.example.MDPGroup7.ui.main.GridMap$14
+ com.example.MDPGroup7.ui.main.GridMap$15
+ com.example.MDPGroup7.ui.main.GridMap$16
+ com.example.MDPGroup7.ui.main.GridMap$17
+ com.example.MDPGroup7.ui.main.GridMap$18
+ com.example.MDPGroup7.ui.main.GridMap$19
+ com.example.MDPGroup7.ui.main.GridMap$2
+ com.example.MDPGroup7.ui.main.GridMap$20
+ com.example.MDPGroup7.ui.main.GridMap$21
+ com.example.MDPGroup7.ui.main.GridMap$22
+ com.example.MDPGroup7.ui.main.GridMap$23
+ com.example.MDPGroup7.ui.main.GridMap$24
+ com.example.MDPGroup7.ui.main.GridMap$25
+ com.example.MDPGroup7.ui.main.GridMap$26
+ com.example.MDPGroup7.ui.main.GridMap$27
+ com.example.MDPGroup7.ui.main.GridMap$28
+ com.example.MDPGroup7.ui.main.GridMap$29
+ com.example.MDPGroup7.ui.main.GridMap$3
+ com.example.MDPGroup7.ui.main.GridMap$30
+ com.example.MDPGroup7.ui.main.GridMap$31
+ com.example.MDPGroup7.ui.main.GridMap$32
+ com.example.MDPGroup7.ui.main.GridMap$33
+ com.example.MDPGroup7.ui.main.GridMap$34
+ com.example.MDPGroup7.ui.main.GridMap$35
+ com.example.MDPGroup7.ui.main.GridMap$36
+ com.example.MDPGroup7.ui.main.GridMap$37
+ com.example.MDPGroup7.ui.main.GridMap$38
+ com.example.MDPGroup7.ui.main.GridMap$39
+ com.example.MDPGroup7.ui.main.GridMap$4
+ com.example.MDPGroup7.ui.main.GridMap$40
+ com.example.MDPGroup7.ui.main.GridMap$41
+ com.example.MDPGroup7.ui.main.GridMap$42
+ com.example.MDPGroup7.ui.main.GridMap$43
+ com.example.MDPGroup7.ui.main.GridMap$44
+ com.example.MDPGroup7.ui.main.GridMap$45
+ com.example.MDPGroup7.ui.main.GridMap$46
+ com.example.MDPGroup7.ui.main.GridMap$47
+ com.example.MDPGroup7.ui.main.GridMap$48
+ com.example.MDPGroup7.ui.main.GridMap$49
+ com.example.MDPGroup7.ui.main.GridMap$5
+ com.example.MDPGroup7.ui.main.GridMap$50
+ com.example.MDPGroup7.ui.main.GridMap$51
+ com.example.MDPGroup7.ui.main.GridMap$52
+ com.example.MDPGroup7.ui.main.GridMap$53
+ com.example.MDPGroup7.ui.main.GridMap$54
+ com.example.MDPGroup7.ui.main.GridMap$55
+ com.example.MDPGroup7.ui.main.GridMap$56
+ com.example.MDPGroup7.ui.main.GridMap$57
+ com.example.MDPGroup7.ui.main.GridMap$58
+ com.example.MDPGroup7.ui.main.GridMap$59
+ com.example.MDPGroup7.ui.main.GridMap$6
+ com.example.MDPGroup7.ui.main.GridMap$60
+ com.example.MDPGroup7.ui.main.GridMap$61
+ com.example.MDPGroup7.ui.main.GridMap$62
+ com.example.MDPGroup7.ui.main.GridMap$63
+ com.example.MDPGroup7.ui.main.GridMap$64
+ com.example.MDPGroup7.ui.main.GridMap$65
+ com.example.MDPGroup7.ui.main.GridMap$66
+ com.example.MDPGroup7.ui.main.GridMap$67
+ com.example.MDPGroup7.ui.main.GridMap$68
+ com.example.MDPGroup7.ui.main.GridMap$69
+ com.example.MDPGroup7.ui.main.GridMap$7
+ com.example.MDPGroup7.ui.main.GridMap$70
+ com.example.MDPGroup7.ui.main.GridMap$71
+ com.example.MDPGroup7.ui.main.GridMap$72
+ com.example.MDPGroup7.ui.main.GridMap$73
+ com.example.MDPGroup7.ui.main.GridMap$74
+ com.example.MDPGroup7.ui.main.GridMap$75
+ com.example.MDPGroup7.ui.main.GridMap$76
+ com.example.MDPGroup7.ui.main.GridMap$77
+ com.example.MDPGroup7.ui.main.GridMap$78
+ com.example.MDPGroup7.ui.main.GridMap$79
+ com.example.MDPGroup7.ui.main.GridMap$8
+ com.example.MDPGroup7.ui.main.GridMap$80
+ com.example.MDPGroup7.ui.main.GridMap$81
+ com.example.MDPGroup7.ui.main.GridMap$82
+ com.example.MDPGroup7.ui.main.GridMap$9
  com.example.MDPGroup7.ui.main.GridMap$Cell
-com/example/MDPGroup7/ui/main/ReconfigureFragment.java
- com.example.MDPGroup7.ui.main.ReconfigureFragment
- com.example.MDPGroup7.ui.main.ReconfigureFragment$1
- com.example.MDPGroup7.ui.main.ReconfigureFragment$2
-com/example/MDPGroup7/ui/main/CommsAdapter.java
- com.example.MDPGroup7.ui.main.CommsAdapter
+ com.example.MDPGroup7.ui.main.GridMap$MyDragShadowBuilder
 com/example/MDPGroup7/ui/main/ControlFragment.java
  com.example.MDPGroup7.ui.main.ControlFragment
  com.example.MDPGroup7.ui.main.ControlFragment$1
- com.example.MDPGroup7.ui.main.ControlFragment$10
- com.example.MDPGroup7.ui.main.ControlFragment$11
- com.example.MDPGroup7.ui.main.ControlFragment$12
- com.example.MDPGroup7.ui.main.ControlFragment$13
  com.example.MDPGroup7.ui.main.ControlFragment$2
  com.example.MDPGroup7.ui.main.ControlFragment$3
  com.example.MDPGroup7.ui.main.ControlFragment$4
@@ -421,6 +492,9 @@ com/example/MDPGroup7/ui/main/ControlFragment.java
 com/example/MDPGroup7/ui/main/MapTabFragment.java
  com.example.MDPGroup7.ui.main.MapTabFragment
  com.example.MDPGroup7.ui.main.MapTabFragment$1
+ com.example.MDPGroup7.ui.main.MapTabFragment$10
+ com.example.MDPGroup7.ui.main.MapTabFragment$11
+ com.example.MDPGroup7.ui.main.MapTabFragment$12
  com.example.MDPGroup7.ui.main.MapTabFragment$2
  com.example.MDPGroup7.ui.main.MapTabFragment$3
  com.example.MDPGroup7.ui.main.MapTabFragment$4
@@ -429,5 +503,3 @@ com/example/MDPGroup7/ui/main/MapTabFragment.java
  com.example.MDPGroup7.ui.main.MapTabFragment$7
  com.example.MDPGroup7.ui.main.MapTabFragment$8
  com.example.MDPGroup7.ui.main.MapTabFragment$9
-com/example/MDPGroup7/ui/main/SectionsPagerAdapter.java
- com.example.MDPGroup7.ui.main.SectionsPagerAdapter

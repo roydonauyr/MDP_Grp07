@@ -6,8 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -16,11 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.MDPGroup7.MainActivity;
-import com.example.MDPGroup7.R;
+import com.example.MDPGroup7.*;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MapTabFragment extends Fragment {
 
@@ -29,13 +31,22 @@ public class MapTabFragment extends Fragment {
 
     private PageViewModel pageViewModel;
 
-    Button resetMapBtn, updateButton;
+    Button resetMapBtn, updateButton, submitChangeBtn;
     ImageButton directionChangeImageBtn, exploredImageBtn, obstacleImageBtn, clearImageBtn;
     ToggleButton setStartPointToggleBtn, setWaypointToggleBtn;
     Switch manualAutoToggleBtn;
     GridMap gridMap;
+
+    Switch dragSwitch;
+    Switch changeObstacleSwitch;
+    Spinner spinner_imageID;
+    Spinner spinner_imageBearing;
     private static boolean autoUpdate = false;
-    public static boolean manualUpdateRequest = false;
+
+    static String imageID;
+    static String imageBearing;
+    static boolean dragStatus;
+    static boolean changeObstacleStatus;
 
     public static MapTabFragment newInstance(int index) {
         MapTabFragment fragment = new MapTabFragment();
@@ -44,7 +55,6 @@ public class MapTabFragment extends Fragment {
         fragment.setArguments(bundle);
         return fragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,20 +71,60 @@ public class MapTabFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.activity_map, container, false);
+        View root = inflater.inflate(R.layout.activity_map_config, container, false);
 
         gridMap = MainActivity.getGridMap();
         final DirectionFragment directionFragment = new DirectionFragment();
 
-        resetMapBtn = root.findViewById(R.id.resetMapBtn);
-        setStartPointToggleBtn = root.findViewById(R.id.setStartPointToggleBtn);
-        setWaypointToggleBtn = root.findViewById(R.id.setWaypointToggleBtn);
-        directionChangeImageBtn = root.findViewById(R.id.directionChangeImageBtn);
+        resetMapBtn = root.findViewById(R.id.resetBtn);
+        submitChangeBtn = root.findViewById(R.id.submitBtn);
+        setStartPointToggleBtn = root.findViewById(R.id.startpointToggleBtn);
+        setWaypointToggleBtn = root.findViewById(R.id.waypointToggleBtn);
+        directionChangeImageBtn = root.findViewById(R.id.changeDirectionBtn);
         exploredImageBtn = root.findViewById(R.id.exploredImageBtn);
-        obstacleImageBtn = root.findViewById(R.id.obstacleImageBtn);
+        obstacleImageBtn = root.findViewById(R.id.addObstacleBtn);
         clearImageBtn = root.findViewById(R.id.clearImageBtn);
-        manualAutoToggleBtn = root.findViewById(R.id.manualAutoToggleBtn);
-        updateButton = root.findViewById(R.id.updateButton);
+        manualAutoToggleBtn = root.findViewById(R.id.autoManualSwitch);
+        updateButton = root.findViewById(R.id.updateMapBtn);
+
+        dragSwitch = root.findViewById(R.id.dragSwitch);
+        changeObstacleSwitch = root.findViewById(R.id.changeObstacleSwitch);
+        spinner_imageID = root.findViewById(R.id.imageIDSpinner);
+        spinner_imageBearing = root.findViewById(R.id.bearingSpinner);
+        spinner_imageID.setEnabled(false);
+        spinner_imageBearing.setEnabled(false);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        // Specify the layout to use when the list of choices appears
+        // Apply the adapter to the spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.imageID_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_imageID.setAdapter(adapter);
+
+        // Repeat for imageBearing
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.imageBearing_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_imageBearing.setAdapter(adapter2);
+
+        spinner_imageID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> a, View v, int pos, long arg3) {
+                imageID = a.getItemAtPosition(pos).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> a) { }
+        });
+
+        spinner_imageBearing.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> a, View v, int pos, long arg3) {
+                imageBearing = a.getItemAtPosition(pos).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> a) { }
+        });
 
         resetMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,13 +135,56 @@ public class MapTabFragment extends Fragment {
             }
         });
 
+        submitChangeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLog("Clicked submitChangeBtn");
+                showToast("Submitting changes...");
+                gridMap.submitChange();
+                showToast("Changes submitted. ");
+            }
+        });
+
+        // switch for dragging
+        dragSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton toggleButton, boolean isChecked) {
+                showToast("Dragging is " + (isChecked ? "on" : "off"));
+                dragStatus = isChecked;
+                if (dragStatus == true) {
+                    // disable imageID and imageBearing and disable setObstacle when drag is on
+                    spinner_imageID.setEnabled(false);
+                    spinner_imageBearing.setEnabled(false);
+                    gridMap.setSetObstacleStatus(false);
+                    changeObstacleSwitch.setChecked(false);
+                }
+            }
+        });
+
+        // switch for changing obstacle
+        changeObstacleSwitch.setOnCheckedChangeListener( new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton toggleButton, boolean isChecked) {
+                showToast("Changing Obstacle is " + (isChecked ? "on" : "off"));
+                changeObstacleStatus = isChecked;
+                if (changeObstacleStatus == true) {
+                    // disable dragging, imageID and imageBearing and disable setObstacle
+                    spinner_imageID.setEnabled(false);
+                    spinner_imageBearing.setEnabled(false);
+                    gridMap.setSetObstacleStatus(false);
+                    dragSwitch.setChecked(false);
+                }
+            }
+        });
+
         setStartPointToggleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showLog("Clicked setStartPointToggleBtn");
                 if (setStartPointToggleBtn.getText().equals("STARTING POINT"))
                     showToast("Cancelled selecting starting point");
-                else if (setStartPointToggleBtn.getText().equals("CANCEL") && !gridMap.getAutoUpdate()) {
+                else if (setStartPointToggleBtn.getText().equals("CANCEL")
+                        && !gridMap.getAutoUpdate()) {
                     showToast("Please select starting point");
                     gridMap.setStartCoordStatus(true);
                     gridMap.toggleCheckedBtn("setStartPointToggleBtn");
@@ -122,23 +215,9 @@ public class MapTabFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 showLog("Clicked directionChangeImageBtn");
-                directionFragment.show(getActivity().getFragmentManager(), "Direction Fragment");
+                directionFragment.show(getActivity().getFragmentManager(),
+                        "Direction Fragment");
                 showLog("Exiting directionChangeImageBtn");
-            }
-        });
-
-        exploredImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLog("Clicked exploredImageBtn");
-                if (!gridMap.getExploredStatus()) {
-                    showToast("Please check cell");
-                    gridMap.setExploredStatus(true);
-                    gridMap.toggleCheckedBtn("exploredImageBtn");
-                }
-                else if (gridMap.getExploredStatus())
-                    gridMap.setSetObstacleStatus(false);
-                showLog("Exiting exploredImageBtn");
             }
         });
 
@@ -146,29 +225,24 @@ public class MapTabFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 showLog("Clicked obstacleImageBtn");
+
                 if (!gridMap.getSetObstacleStatus()) {
                     showToast("Please plot obstacles");
                     gridMap.setSetObstacleStatus(true);
+                    spinner_imageID.setEnabled(true);
+                    spinner_imageBearing.setEnabled(true);
                     gridMap.toggleCheckedBtn("obstacleImageBtn");
                 }
-                else if (gridMap.getSetObstacleStatus())
+                else if (gridMap.getSetObstacleStatus()) {
                     gridMap.setSetObstacleStatus(false);
-                showLog("Exiting obstacleImageBtn");
-            }
-        });
-
-        clearImageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLog("Clicked clearImageBtn");
-                if (!gridMap.getUnSetCellStatus()) {
-                    showToast("Please remove cells");
-                    gridMap.setUnSetCellStatus(true);
-                    gridMap.toggleCheckedBtn("clearImageBtn");
+                    spinner_imageID.setEnabled(false);
+                    spinner_imageBearing.setEnabled(false);
                 }
-                else if (gridMap.getUnSetCellStatus())
-                    gridMap.setUnSetCellStatus(false);
-                showLog("Exiting clearImageBtn");
+
+                changeObstacleSwitch.setChecked(false);
+                dragSwitch.setChecked(false);
+                showLog("obstacle status = " + gridMap.getSetObstacleStatus());
+                showLog("Exiting obstacleImageBtn");
             }
         });
 
@@ -183,8 +257,6 @@ public class MapTabFragment extends Fragment {
                         gridMap.toggleCheckedBtn("None");
                         updateButton.setClickable(false);
                         updateButton.setTextColor(Color.GRAY);
-                        ControlFragment.getCalibrateButton().setClickable(false);
-                        ControlFragment.getCalibrateButton().setTextColor(Color.GRAY);
                         manualAutoToggleBtn.setText("AUTO");
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -198,8 +270,6 @@ public class MapTabFragment extends Fragment {
                         gridMap.toggleCheckedBtn("None");
                         updateButton.setClickable(true);
                         updateButton.setTextColor(Color.BLACK);
-                        ControlFragment.getCalibrateButton().setClickable(true);
-                        ControlFragment.getCalibrateButton().setTextColor(Color.BLACK);
                         manualAutoToggleBtn.setText("MANUAL");
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -214,22 +284,22 @@ public class MapTabFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showLog("Clicked updateButton");
-                MainActivity.printMessage("sendArena");
-                manualUpdateRequest = true;
-                showLog("Exiting updateButton");
-                try {
-                    String message = "{\"map\":[{\"explored\": \"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"length\":300,\"obstacle\":\"00000000000000000706180400080010001e000400000000200044438f840000000000000080\"}]}";
 
-                    gridMap.setReceivedJsonObject(new JSONObject(message));
-                    gridMap.updateMapInformation();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                gridMap.imageBearings.get(9)[5] = "South";
+                gridMap.imageBearings.get(15)[15] = "South";
+                gridMap.imageBearings.get(14)[7] = "West";
+                gridMap.imageBearings.get(4)[15] = "West";
+                gridMap.imageBearings.get(9)[12] = "East";
+                gridMap.setObstacleCoord(5+1, 9+1);
+                gridMap.setObstacleCoord(15+1, 15+1);
+                gridMap.setObstacleCoord(7+1, 14+1);
+                gridMap.setObstacleCoord(15+1, 4+1);
+                gridMap.setObstacleCoord(12+1, 9+1);
+
+                gridMap.invalidate();
+                showLog("Exiting updateButton");
             }
         });
-
-
-
         return root;
     }
 
@@ -240,5 +310,4 @@ public class MapTabFragment extends Fragment {
     private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
-
 }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -23,13 +24,12 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.MDPGroup7.ui.main.*;
 import com.google.android.material.tabs.TabLayout;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,18 +39,21 @@ public class MainActivity extends AppCompatActivity {
     private static Context context;
 
     private static GridMap gridMap;
+    private ControlFragment controlFragment;
     static TextView xAxisTextView, yAxisTextView, directionAxisTextView;
-    static TextView robotStatusTextView;
-    static Button f1, f2;
-    Button reconfigure;
-    ReconfigureFragment reconfigureFragment = new ReconfigureFragment();
+    static TextView robotStatusTextView, bluetoothStatus, bluetoothDevice;
+    static Button upBtn, downBtn, leftBtn, rightBtn;
 
-    BluetoothConnectionService mBluetoothConnection;
     BluetoothDevice mBTDevice;
     private static UUID myUUID;
     ProgressDialog myDialog;
 
+    String obstacleID = "";
+    String imageID = "";
+
     private static final String TAG = "Main Activity";
+    public static boolean stopTimerFlag = false;
+    public static boolean stopWk9TimerFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +61,16 @@ public class MainActivity extends AppCompatActivity {
         // Initialization
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this,
+                getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setOffscreenPageLimit(9999);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
+        LocalBroadcastManager
+                .getInstance(this)
+                .registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
 
         // Set up sharedPreferences
         MainActivity.context = getApplicationContext();
@@ -73,22 +79,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("direction","None");
         editor.putString("connStatus", "Disconnected");
         editor.commit();
-
-        Button printMDFStringButton = (Button) findViewById(R.id.printMDFString);
-        printMDFStringButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = "Explored : " + GridMap.getPublicMDFExploration();
-                editor = sharedPreferences.edit();
-                editor.putString("message", CommsFragment.getMessageReceivedTextView().getText() + "\n" + message);
-                editor.commit();
-                refreshMessageReceived();
-                message = "Obstacle : " + GridMap.getPublicMDFObstacle() + "0";
-                editor.putString("message", CommsFragment.getMessageReceivedTextView().getText() + "\n" + message);
-                editor.commit();
-                refreshMessageReceived();
-            }
-        });
 
         // Toolbar
         Button bluetoothButton = (Button) findViewById(R.id.bluetoothButton);
@@ -99,17 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(popup);
             }
         });
-        Button mapInformationButton = (Button) findViewById(R.id.mapInfoButton);
-        mapInformationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editor.putString("mapJsonObject", String.valueOf(gridMap.getCreateJsonObject()));
-                editor.commit();
-                Intent popup = new Intent(MainActivity.this, MapInformation.class);
-                startActivity(popup);
-            }
-        });
 
+        // Bluetooth Status
+        bluetoothStatus = findViewById(R.id.bluetoothStatus);
+        bluetoothDevice = findViewById(R.id.bluetoothConnectedDevice);
 
         // Map
         gridMap = new GridMap(this);
@@ -118,73 +101,54 @@ public class MainActivity extends AppCompatActivity {
         yAxisTextView = findViewById(R.id.yAxisTextView);
         directionAxisTextView = findViewById(R.id.directionAxisTextView);
 
+        // ControlFragment for Timer
+        controlFragment = new ControlFragment();
+
+        // initialize ITEM_LIST and imageBearings strings
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                gridMap.ITEM_LIST.get(i)[j] = "";
+                gridMap.imageBearings.get(i)[j] = "";
+            }
+        }
+
+        // Controller
+        upBtn = findViewById(R.id.upBtn);
+        downBtn = findViewById(R.id.downBtn);
+        leftBtn = findViewById(R.id.leftBtn);
+        rightBtn = findViewById(R.id.rightBtn);
+
         // Robot Status
-        robotStatusTextView = findViewById(R.id.robotStatusTextView);
+        robotStatusTextView = findViewById(R.id.robotStatus);
 
         myDialog = new ProgressDialog(MainActivity.this);
         myDialog.setMessage("Waiting for other device to reconnect...");
         myDialog.setCancelable(false);
-        myDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        myDialog.setButton(
+            DialogInterface.BUTTON_NEGATIVE,
+            "Cancel",
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
             }
-        });
-
-        f1 = (Button) findViewById(R.id.f1ActionButton);
-        f2 = (Button) findViewById(R.id.f2ActionButton);
-        reconfigure = (Button) findViewById(R.id.configureButton);
-
-        if (sharedPreferences.contains("F1")) {
-            f1.setContentDescription(sharedPreferences.getString("F1", ""));
-            showLog("setText for f1Btn: " + f1.getContentDescription().toString());
-        }
-        if (sharedPreferences.contains("F2")) {
-            f2.setContentDescription(sharedPreferences.getString("F2", ""));
-            showLog("setText for f2Btn: " + f2.getContentDescription().toString());
-        }
-
-        f1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLog("Clicked f1Btn");
-                if (!f1.getContentDescription().toString().equals("empty"))
-                    MainActivity.printMessage(f1.getContentDescription().toString());
-                showLog("f1Btn value: " + f1.getContentDescription().toString());
-                showLog("Exiting f1Btn");
-            }
-        });
-
-        f2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLog("Clicked f2Btn");
-                if (!f2.getContentDescription().toString().equals("empty"))
-                    MainActivity.printMessage(f2.getContentDescription().toString());
-                showLog("f2Btn value: " + f2.getContentDescription().toString());
-                showLog("Exiting f2Btn");
-            }
-        });
-
-        reconfigure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLog("Clicked reconfigureBtn");
-                reconfigureFragment.show(getFragmentManager(), "Reconfigure Fragment");
-                showLog("Exiting reconfigureBtn");
-            }
-        });
+        );
     }
-
-    public static Button getF1() { return f1; }
-
-    public static Button getF2() { return f2; }
 
     public static GridMap getGridMap() {
         return gridMap;
     }
 
     public static TextView getRobotStatusTextView() {  return robotStatusTextView; }
+
+    public static Button getUpBtn() { return upBtn; }
+    public static Button getDownBtn() { return downBtn; }
+    public static Button getLeftBtn() { return leftBtn; }
+    public static Button getRightBtn() { return rightBtn; }
+
+    public static TextView getBluetoothStatus() { return bluetoothStatus; }
+    public static TextView getConnectedDevice() { return bluetoothDevice; }
 
     public static void sharedPreferences() {
         sharedPreferences = MainActivity.getSharedPreferences(MainActivity.context);
@@ -201,12 +165,14 @@ public class MainActivity extends AppCompatActivity {
             BluetoothConnectionService.write(bytes);
         }
         showLog(message);
-        editor.putString("message", CommsFragment.getMessageReceivedTextView().getText() + "\n" + message);
+        editor.putString("message",
+            BluetoothChatFragment.getMessageReceivedTextView().getText() + "\n" + message);
         editor.commit();
         refreshMessageReceived();
         showLog("Exiting printMessage");
     }
 
+    // Store received message into string
     public static void printMessage(String name, int x, int y) throws JSONException {
         showLog("Entering printMessage");
         sharedPreferences();
@@ -215,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
         String message;
 
         switch(name) {
-//            case "starting":
             case "waypoint":
                 jsonObject.put(name, name);
                 jsonObject.put("x", x);
@@ -226,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
                 message = "Unexpected default for printMessage: " + name;
                 break;
         }
-        editor.putString("message", CommsFragment.getMessageReceivedTextView().getText() + "\n" + message);
+        editor.putString("message",
+            BluetoothChatFragment.getMessageReceivedTextView().getText() + "\n" + message);
         editor.commit();
         if (BluetoothConnectionService.BluetoothConnectionStatus == true) {
             byte[] bytes = message.getBytes(Charset.defaultCharset());
@@ -236,9 +202,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void refreshMessageReceived() {
-        CommsFragment.getMessageReceivedTextView().setText(sharedPreferences.getString("message", ""));
+        BluetoothChatFragment
+            .getMessageReceivedTextView()
+            .setText(sharedPreferences.getString("message", ""));
     }
-
 
     public void refreshDirection(String direction) {
         gridMap.setRobotDirection(direction);
@@ -255,7 +222,8 @@ public class MainActivity extends AppCompatActivity {
     public static void receiveMessage(String message) {
         showLog("Entering receiveMessage");
         sharedPreferences();
-        editor.putString("message", sharedPreferences.getString("message", "") + "\n" + message);
+        editor.putString("message",
+            sharedPreferences.getString("message", "") + "\n" + message);
         editor.commit();
         showLog("Exiting receiveMessage");
     }
@@ -283,20 +251,16 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Log.d(TAG, "mBroadcastReceiver5: Device now connected to "+mDevice.getName());
-                Toast.makeText(MainActivity.this, "Device now connected to "+mDevice.getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Device now connected to "
+                        + mDevice.getName(), Toast.LENGTH_LONG).show();
                 editor.putString("connStatus", "Connected to " + mDevice.getName());
-//                TextView connStatusTextView = findViewById(R.id.connStatusTextView);
-//                connStatusTextView.setText("Connected to " + mDevice.getName());
             }
             else if(status.equals("disconnected")){
                 Log.d(TAG, "mBroadcastReceiver5: Disconnected from "+mDevice.getName());
-                Toast.makeText(MainActivity.this, "Disconnected from "+mDevice.getName(), Toast.LENGTH_LONG).show();
-//                mBluetoothConnection = new BluetoothConnectionService(MainActivity.this);
-//                mBluetoothConnection.startAcceptThread();
+                Toast.makeText(MainActivity.this, "Disconnected from "
+                        + mDevice.getName(), Toast.LENGTH_LONG).show();
 
                 editor.putString("connStatus", "Disconnected");
-//                TextView connStatusTextView = findViewById(R.id.connStatusTextView);
-//                connStatusTextView.setText("Disconnected");
 
                 myDialog.show();
             }
@@ -304,68 +268,87 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    // message handler
+    // alg sends x,y,robotDirection,movementAction
+    // alg sends ALG,<obstacle id>
+    // rpi sends RPI,<image id>
     BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("receivedMessage");
             showLog("receivedMessage: message --- " + message);
-            try {
-                if (message.length() > 7 && message.substring(2,6).equals("grid")) {
-                    String resultString = "";
-                    String amdString = message.substring(11,message.length()-2);
-                    showLog("amdString: " + amdString);
-                    BigInteger hexBigIntegerExplored = new BigInteger(amdString, 16);
-                    String exploredString = hexBigIntegerExplored.toString(2);
 
-                    while (exploredString.length() < 300)
-                        exploredString = "0" + exploredString;
+            if(message.contains(",")) {
+                String[] cmd = message.split(",");
 
-                    for (int i=0; i<exploredString.length(); i=i+15) {
-                        int j=0;
-                        String subString = "";
-                        while (j<15) {
-                            subString = subString + exploredString.charAt(j+i);
-                            j++;
-                        }
-                        resultString = subString + resultString;
+                // check if string is cmd sent by ALG/RPI to get obstacle/image id
+                if (cmd[0].equals("ALG") || cmd[0].equals("RPI")) {
+                    showLog("cmd[0] is ALG or RPI");
+                    if(obstacleID.equals(""))
+                        obstacleID = cmd[0].equals("ALG") ? cmd[1] : "";
+                    if(imageID.equals(""))
+                        imageID = cmd[0].equals("RPI") ? cmd[1] : "";
+
+                    showLog("obstacleID = " + obstacleID);
+                    showLog("imageID = " + imageID);
+
+                    // call update fn only when both IDs are obtained
+                    if (!(obstacleID.equals("") || imageID.equals(""))) {
+                        showLog("imageID and obstacleID not empty");
+                        gridMap.updateIDFromRpi(obstacleID, imageID);
+                        obstacleID = "";
+                        imageID = "";
                     }
-                    hexBigIntegerExplored = new BigInteger(resultString, 2);
-                    resultString = hexBigIntegerExplored.toString(16);
+                } else {
 
-                    JSONObject amdObject = new JSONObject();
-                    amdObject.put("explored", "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-                    amdObject.put("length", amdString.length()*4);
-                    amdObject.put("obstacle", resultString);
-                    JSONArray amdArray = new JSONArray();
-                    amdArray.put(amdObject);
-                    JSONObject amdMessage = new JSONObject();
-                    amdMessage.put("map", amdArray);
-                    message = String.valueOf(amdMessage);
-                    showLog("Executed for AMD message, message: " + message);
+                    // alg sends in cm and float e.g. 100,100,N
+                    float x = Integer.parseInt(cmd[0]);
+                    float y = Integer.parseInt(cmd[1]);
+
+                    // process received figures to pass into our fn
+                    int a = Math.round(x);
+                    int b = Math.round(y);
+                    a = (a / 10) + 1;
+                    b = (b / 10) + 1;
+
+                    String direction = cmd[2];
+
+                    // allow robot to show up on grid if its on the very boundary
+                    if (a == 1) a++;
+                    if (b == 20) b--;
+
+                    if (cmd.length == 4){
+                        String command = cmd[3];
+
+                        // if move forward, reverse, turn on the spot left/right
+                        if (command.equals("f") || command.equals("r") || command.equals("sr")
+                            || command.equals("sl")) {
+                            showLog("forward, reverse or turn on spot");
+                            gridMap.performAlgoCommand(a, b, direction);
+                        }
+                        // for all other turning cmds
+                        else {
+                            gridMap.performAlgoTurning(a, b, direction, command);
+                        }
+                    }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+            else if (message.equals("END")) {
+                // if wk 8 btn is checked, means running wk 8 challenge and likewise for wk 9
+                // end the corresponding timer
+                ToggleButton exploreButton = findViewById(R.id.exploreToggleBtn2);
+                ToggleButton fastestButton = findViewById(R.id.fastestToggleBtn2);
 
-            try {
-                if (message.length() > 8 && message.substring(2,7).equals("image")) {
-                    JSONObject jsonObject = new JSONObject(message);
-                    JSONArray jsonArray = jsonObject.getJSONArray("image");
-                    //gridMap.drawImageNumberCell(jsonArray.getInt(0),jsonArray.getInt(1),jsonArray.getInt(2));
-                    showLog("Image Added for index: " + jsonArray.getInt(0) + "," +jsonArray.getInt(1));
-                }
-            } catch (JSONException e) {
-                showLog("Adding Image Failed");
-            }
-
-            if (gridMap.getAutoUpdate() || MapTabFragment.manualUpdateRequest) {
-                try {
-                    gridMap.setReceivedJsonObject(new JSONObject(message));
-                    gridMap.updateMapInformation();
-                    MapTabFragment.manualUpdateRequest = false;
-                    showLog("messageReceiver: try decode successful");
-                } catch (JSONException e) {
-                    showLog("messageReceiver: try decode unsuccessful");
+                if (exploreButton.isChecked()) {
+                    showLog("explorebutton is checked");
+                    stopTimerFlag = true;
+                    exploreButton.setChecked(false);
+                    robotStatusTextView.setText("Auto Movement/ImageRecog Stopped");
+                } else if (fastestButton.isChecked()) {
+                    showLog("fastestbutton is checked");
+                    stopTimerFlag = true;
+                    fastestButton.setChecked(false);
+                    robotStatusTextView.setText("Week 9 Stopped");
                 }
             }
             sharedPreferences();
@@ -430,3 +413,4 @@ public class MainActivity extends AppCompatActivity {
         showLog("Exiting onSaveInstanceState");
     }
 }
+

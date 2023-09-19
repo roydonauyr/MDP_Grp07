@@ -7,10 +7,14 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.example.MDPGroup7.MainActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +27,7 @@ public class BluetoothConnectionService {
     private static BluetoothConnectionService instance;
     private static final String TAG = "DebuggingTag";
 
-    private static final String appName = "MDP_Group_07";
+    private static final String appName = "MDP_Group_15";
     public static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private final BluetoothAdapter mBluetoothAdapter;
@@ -194,6 +198,13 @@ public class BluetoothConnectionService {
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(connectionStatus);
             BluetoothConnectionStatus = true;
 
+            TextView status = MainActivity.getBluetoothStatus();
+            status.setText("Connected");
+            status.setTextColor(Color.GREEN);
+
+            TextView device = MainActivity.getConnectedDevice();
+            device.setText(mDevice.getName());
+
             this.mSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -228,6 +239,9 @@ public class BluetoothConnectionService {
 
                     connectionStatus = new Intent("ConnectionStatus");
                     connectionStatus.putExtra("Status", "disconnected");
+                    TextView status = MainActivity.getBluetoothStatus();
+                    status.setText("Disconnected");
+                    status.setTextColor(Color.RED);
                     connectionStatus.putExtra("Device", mDevice);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(connectionStatus);
                     BluetoothConnectionStatus = false;

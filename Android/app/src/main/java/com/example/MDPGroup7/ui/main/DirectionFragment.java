@@ -104,4 +104,3 @@ public class DirectionFragment extends DialogFragment {
         Log.d(TAG, message);
     }
 }
-
