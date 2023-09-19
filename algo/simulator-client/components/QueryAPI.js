@@ -77,7 +77,7 @@ export default class QueryAPI {
       retrying: false,
     }
 
-    this._post("path", data, {})
+    this._post("nav", data, {})
       .then(responseData => {
         if (callback) {
           console.log("POST Response:", responseData)
