@@ -28,6 +28,8 @@ class RaspberryPi:
         # Locks
         self.movement_lock = self.manager.Lock()
 
+        self.unpause = self.manager.Event()
+
         # Queues
         self.command_queue = self.manager.Queue() # Commands from algorithm to be processed by STM
         self.command_queue.put("SF010")
@@ -35,8 +37,15 @@ class RaspberryPi:
         self.command_queue.put("RB090")
         self.command_queue.put("SF010")
         self.command_queue.put("LF090")
-        self.command_queue.put("BW010")
+        self.command_queue.put("SB010")
         self.command_queue.put("LB090")
+        self.command_queue.put("JF090")
+        self.command_queue.put("JB090")
+        self.command_queue.put("SB010")
+        self.command_queue.put("KF090")
+        self.command_queue.put("KB090")
+        self.command_queue.put("SB010")
+
 
         # Create processes
         self.process_receive_stm = None
@@ -105,6 +114,7 @@ class RaspberryPi:
             stm_prefix = ("SF", "SB", "RF", "RB", "LF", "LB", "JF", "JB", "KF", "KB")
 
             if command.startswith(stm_prefix):
+                time.sleep(1)
                 self.stm.send(command)
                 print(f"Sending to stm: {command}")
             else:
@@ -113,3 +123,4 @@ class RaspberryPi:
 if __name__ == "__main__":
     rpi = RaspberryPi()
     rpi.start()
+    rpi.unpause.wait()
