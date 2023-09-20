@@ -140,6 +140,7 @@ class RaspberryPi:
             stm_prefix = ("SF", "SB", "RF", "RB", "LF", "LB", "JF", "JB", "KF", "KB")
 
             if command.startswith(stm_prefix):
+                time.sleep(1)
                 self.stm.send(command)
                 print(f"Sending to stm: {command}")
             elif command.startswith("CAP"):
@@ -206,3 +207,4 @@ class RaspberryPi:
 if __name__ == "__main__":
     rpi = RaspberryPi()
     rpi.start()
+    rpi.unpause.wait()
