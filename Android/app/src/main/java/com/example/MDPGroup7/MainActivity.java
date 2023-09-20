@@ -302,8 +302,8 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     // alg sends in cm and float e.g. 100,100,N
-                    float x = Integer.parseInt(cmd[0]);
-                    float y = Integer.parseInt(cmd[1]);
+                    float x = Integer.parseInt(cmd[1]);
+                    float y = Integer.parseInt(cmd[2]);
 
                     // process received figures to pass into our fn
                     int a = Math.round(x);
@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                     a = (a / 10) + 1;
                     b = (b / 10) + 1;
 
-                    String direction = cmd[2];
+                    String direction = cmd[3];
 
                     // allow robot to show up on grid if its on the very boundary
                     if (a == 1) a++;

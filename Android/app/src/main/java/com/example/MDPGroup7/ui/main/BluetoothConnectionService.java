@@ -27,7 +27,7 @@ public class BluetoothConnectionService {
     private static BluetoothConnectionService instance;
     private static final String TAG = "DebuggingTag";
 
-    private static final String appName = "MDP_Group_15";
+    private static final String appName = "MDP_Group_07";
     public static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private final BluetoothAdapter mBluetoothAdapter;

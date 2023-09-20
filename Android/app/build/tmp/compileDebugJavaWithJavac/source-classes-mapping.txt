@@ -29,14 +29,10 @@ com/example/MDPGroup7/ui/main/MapInformation.java
  com.example.MDPGroup7.ui.main.MapInformation$1
 androidx/lifecycle/livedata/core/R.java
  androidx.lifecycle.livedata.core.R
-com/example/MDPGroup7/ui/main/DeviceListAdapter.java
- com.example.MDPGroup7.ui.main.DeviceListAdapter
-com/example/MDPGroup7/ui/main/BluetoothConnectionService.java
- com.example.MDPGroup7.ui.main.BluetoothConnectionService
- com.example.MDPGroup7.ui.main.BluetoothConnectionService$AcceptThread
- com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectThread
- com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectThread$1
- com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectedThread
+com/google/android/gms/tasks/R.java
+ com.google.android.gms.tasks.R
+androidx/localbroadcastmanager/R.java
+ androidx.localbroadcastmanager.R
 androidx/appcompat/resources/R.java
  androidx.appcompat.resources.R
  androidx.appcompat.resources.R$attr
@@ -99,10 +95,8 @@ androidx/asynclayoutinflater/R.java
  androidx.asynclayoutinflater.R$string
  androidx.asynclayoutinflater.R$style
  androidx.asynclayoutinflater.R$styleable
-com/example/MDPGroup7/ui/main/DirectionFragment.java
- com.example.MDPGroup7.ui.main.DirectionFragment
- com.example.MDPGroup7.ui.main.DirectionFragment$1
- com.example.MDPGroup7.ui.main.DirectionFragment$2
+androidx/lifecycle/service/R.java
+ androidx.lifecycle.service.R
 androidx/interpolator/R.java
  androidx.interpolator.R
 com/google/android/gms/maps/R.java
@@ -352,26 +346,8 @@ androidx/slidingpanelayout/R.java
  androidx.slidingpanelayout.R$string
  androidx.slidingpanelayout.R$style
  androidx.slidingpanelayout.R$styleable
-com/example/MDPGroup7/ui/main/BluetoothPopUp.java
- com.example.MDPGroup7.ui.main.BluetoothPopUp
- com.example.MDPGroup7.ui.main.BluetoothPopUp$1
- com.example.MDPGroup7.ui.main.BluetoothPopUp$10
- com.example.MDPGroup7.ui.main.BluetoothPopUp$11
- com.example.MDPGroup7.ui.main.BluetoothPopUp$12
- com.example.MDPGroup7.ui.main.BluetoothPopUp$2
- com.example.MDPGroup7.ui.main.BluetoothPopUp$3
- com.example.MDPGroup7.ui.main.BluetoothPopUp$4
- com.example.MDPGroup7.ui.main.BluetoothPopUp$5
- com.example.MDPGroup7.ui.main.BluetoothPopUp$6
- com.example.MDPGroup7.ui.main.BluetoothPopUp$7
- com.example.MDPGroup7.ui.main.BluetoothPopUp$8
- com.example.MDPGroup7.ui.main.BluetoothPopUp$9
-com/google/android/gms/tasks/R.java
- com.google.android.gms.tasks.R
-androidx/lifecycle/process/R.java
- androidx.lifecycle.process.R
-androidx/lifecycle/service/R.java
- androidx.lifecycle.service.R
+com/example/MDPGroup7/ui/main/DeviceListAdapter.java
+ com.example.MDPGroup7.ui.main.DeviceListAdapter
 androidx/viewpager/R.java
  androidx.viewpager.R
  androidx.viewpager.R$attr
@@ -384,8 +360,8 @@ androidx/viewpager/R.java
  androidx.viewpager.R$string
  androidx.viewpager.R$style
  androidx.viewpager.R$styleable
-androidx/localbroadcastmanager/R.java
- androidx.localbroadcastmanager.R
+androidx/lifecycle/process/R.java
+ androidx.lifecycle.process.R
 com/example/MDPGroup7/MainActivity.java
  com.example.MDPGroup7.MainActivity
  com.example.MDPGroup7.MainActivity$1
@@ -478,6 +454,20 @@ com/example/MDPGroup7/ui/main/GridMap.java
  com.example.MDPGroup7.ui.main.GridMap$9
  com.example.MDPGroup7.ui.main.GridMap$Cell
  com.example.MDPGroup7.ui.main.GridMap$MyDragShadowBuilder
+com/example/MDPGroup7/ui/main/BluetoothPopUp.java
+ com.example.MDPGroup7.ui.main.BluetoothPopUp
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$1
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$10
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$11
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$12
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$2
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$3
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$4
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$5
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$6
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$7
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$8
+ com.example.MDPGroup7.ui.main.BluetoothPopUp$9
 com/example/MDPGroup7/ui/main/ControlFragment.java
  com.example.MDPGroup7.ui.main.ControlFragment
  com.example.MDPGroup7.ui.main.ControlFragment$1
@@ -489,6 +479,12 @@ com/example/MDPGroup7/ui/main/ControlFragment.java
  com.example.MDPGroup7.ui.main.ControlFragment$7
  com.example.MDPGroup7.ui.main.ControlFragment$8
  com.example.MDPGroup7.ui.main.ControlFragment$9
+com/example/MDPGroup7/ui/main/BluetoothConnectionService.java
+ com.example.MDPGroup7.ui.main.BluetoothConnectionService
+ com.example.MDPGroup7.ui.main.BluetoothConnectionService$AcceptThread
+ com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectThread
+ com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectThread$1
+ com.example.MDPGroup7.ui.main.BluetoothConnectionService$ConnectedThread
 com/example/MDPGroup7/ui/main/MapTabFragment.java
  com.example.MDPGroup7.ui.main.MapTabFragment
  com.example.MDPGroup7.ui.main.MapTabFragment$1
@@ -503,3 +499,7 @@ com/example/MDPGroup7/ui/main/MapTabFragment.java
  com.example.MDPGroup7.ui.main.MapTabFragment$7
  com.example.MDPGroup7.ui.main.MapTabFragment$8
  com.example.MDPGroup7.ui.main.MapTabFragment$9
+com/example/MDPGroup7/ui/main/DirectionFragment.java
+ com.example.MDPGroup7.ui.main.DirectionFragment
+ com.example.MDPGroup7.ui.main.DirectionFragment$1
+ com.example.MDPGroup7.ui.main.DirectionFragment$2
