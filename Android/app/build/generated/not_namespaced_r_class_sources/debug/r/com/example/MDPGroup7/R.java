@@ -5532,9 +5532,12 @@ public final class R {
     public static final int outline_arrow_downward_24=0x7f0800b7;
     public static final int outline_arrow_forward_24=0x7f0800b8;
     public static final int outline_arrow_upward_24=0x7f0800b9;
-    public static final int rounded_corner=0x7f0800ba;
-    public static final int tooltip_frame_dark=0x7f0800bb;
-    public static final int tooltip_frame_light=0x7f0800bc;
+    public static final int r_11=0x7f0800ba;
+    public static final int r_12=0x7f0800bb;
+    public static final int r_13=0x7f0800bc;
+    public static final int rounded_corner=0x7f0800bd;
+    public static final int tooltip_frame_dark=0x7f0800be;
+    public static final int tooltip_frame_light=0x7f0800bf;
   }
   public static final class id {
     public static final int ALT=0x7f090000;

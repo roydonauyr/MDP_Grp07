@@ -29,8 +29,8 @@ com/example/MDPGroup7/ui/main/MapInformation.java
  com.example.MDPGroup7.ui.main.MapInformation$1
 androidx/lifecycle/livedata/core/R.java
  androidx.lifecycle.livedata.core.R
-com/google/android/gms/tasks/R.java
- com.google.android.gms.tasks.R
+com/example/MDPGroup7/ui/main/DeviceListAdapter.java
+ com.example.MDPGroup7.ui.main.DeviceListAdapter
 androidx/localbroadcastmanager/R.java
  androidx.localbroadcastmanager.R
 androidx/appcompat/resources/R.java
@@ -346,8 +346,6 @@ androidx/slidingpanelayout/R.java
  androidx.slidingpanelayout.R$string
  androidx.slidingpanelayout.R$style
  androidx.slidingpanelayout.R$styleable
-com/example/MDPGroup7/ui/main/DeviceListAdapter.java
- com.example.MDPGroup7.ui.main.DeviceListAdapter
 androidx/viewpager/R.java
  androidx.viewpager.R
  androidx.viewpager.R$attr
@@ -360,6 +358,8 @@ androidx/viewpager/R.java
  androidx.viewpager.R$string
  androidx.viewpager.R$style
  androidx.viewpager.R$styleable
+com/google/android/gms/tasks/R.java
+ com.google.android.gms.tasks.R
 androidx/lifecycle/process/R.java
  androidx.lifecycle.process.R
 com/example/MDPGroup7/MainActivity.java
@@ -454,6 +454,8 @@ com/example/MDPGroup7/ui/main/GridMap.java
  com.example.MDPGroup7.ui.main.GridMap$9
  com.example.MDPGroup7.ui.main.GridMap$Cell
  com.example.MDPGroup7.ui.main.GridMap$MyDragShadowBuilder
+com/example/MDPGroup7/ui/main/JSONProcessing.java
+ com.example.MDPGroup7.ui.main.JSONProcessing
 com/example/MDPGroup7/ui/main/BluetoothPopUp.java
  com.example.MDPGroup7.ui.main.BluetoothPopUp
  com.example.MDPGroup7.ui.main.BluetoothPopUp$1

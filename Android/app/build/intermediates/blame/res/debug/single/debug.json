@@ -4,32 +4,32 @@
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_36dp.png"
     },
     {
-        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\anim_abc_popup_enter.xml.flat",
-        "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\anim\\abc_popup_enter.xml"
-    },
-    {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_ic_map_info.png.flat",
         "source": "D:\\MDP_Grp07\\Android\\app\\build\\generated\\res\\pngs\\debug\\drawable-xhdpi\\ic_map_info.png"
+    },
+    {
+        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\anim_abc_popup_enter.xml.flat",
+        "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\anim\\abc_popup_enter.xml"
     },
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\anim-v21_design_bottom_sheet_slide_in.xml.flat",
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\26b0b28f215d4758c4dfd2193790333a\\material-1.0.0\\res\\anim-v21\\design_bottom_sheet_slide_in.xml"
     },
     {
-        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_check.png.flat",
-        "source": "D:\\MDP_Grp07\\Android\\app\\src\\main\\res\\drawable\\ic_check.png"
-    },
-    {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\0cc376f67643cc617bf813c376cbaf51\\play-services-base-17.0.0\\res\\drawable-hdpi-v4\\common_google_signin_btn_icon_light_normal_background.9.png"
     },
     {
-        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\anim_fragment_fast_out_extra_slow_in.xml.flat",
-        "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\2d73a5851153cdaca80649697ba2aff3\\fragment-1.2.0\\res\\anim\\fragment_fast_out_extra_slow_in.xml"
+        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_ic_check.png.flat",
+        "source": "D:\\MDP_Grp07\\Android\\app\\src\\main\\res\\drawable\\ic_check.png"
     },
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_design_ic_visibility.png.flat",
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\26b0b28f215d4758c4dfd2193790333a\\material-1.0.0\\res\\drawable-xxhdpi-v4\\design_ic_visibility.png"
+    },
+    {
+        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\anim_fragment_fast_out_extra_slow_in.xml.flat",
+        "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\2d73a5851153cdaca80649697ba2aff3\\fragment-1.2.0\\res\\anim\\fragment_fast_out_extra_slow_in.xml"
     },
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_notification_bg_normal_pressed.9.png.flat",
@@ -56,12 +56,12 @@
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\drawable-hdpi-v4\\abc_ic_star_half_black_16dp.png"
     },
     {
-        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_edit_text_material.xml.flat",
-        "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\drawable\\abc_edit_text_material.xml"
-    },
-    {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_spinner_mtrl_am_alpha.9.png.flat",
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\drawable-mdpi-v4\\abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_edit_text_material.xml.flat",
+        "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\drawable\\abc_edit_text_material.xml"
     },
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_abc_text_select_handle_middle_mtrl_light.png.flat",
@@ -1964,6 +1964,10 @@
         "source": "D:\\MDP_Grp07\\Android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
+        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_r_12.png.flat",
+        "source": "D:\\MDP_Grp07\\Android\\app\\src\\main\\res\\drawable\\r_12.png"
+    },
+    {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_abc_ic_menu_paste_mtrl_am_alpha.png.flat",
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\drawable-xxhdpi-v4\\abc_ic_menu_paste_mtrl_am_alpha.png"
     },
@@ -2018,6 +2022,10 @@
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_list_pressed_holo_light.9.png.flat",
         "source": "C:\\Users\\ICBC\\.gradle\\caches\\transforms-2\\files-2.1\\dc1b1298ed651ed2015da6fcf519fde1\\appcompat-1.1.0\\res\\drawable-hdpi-v4\\abc_list_pressed_holo_light.9.png"
+    },
+    {
+        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_r_13.png.flat",
+        "source": "D:\\MDP_Grp07\\Android\\app\\src\\main\\res\\drawable\\r_13.png"
     },
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\layout_abc_select_dialog_material.xml.flat",
@@ -2170,6 +2178,10 @@
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_ic_launcher_background.png.flat",
         "source": "D:\\MDP_Grp07\\Android\\app\\build\\generated\\res\\pngs\\debug\\drawable-xhdpi\\ic_launcher_background.png"
+    },
+    {
+        "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_r_11.png.flat",
+        "source": "D:\\MDP_Grp07\\Android\\app\\src\\main\\res\\drawable\\r_11.png"
     },
     {
         "merged": "D:\\MDP_Grp07\\Android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v24_outline_arrow_forward_24.xml.flat",

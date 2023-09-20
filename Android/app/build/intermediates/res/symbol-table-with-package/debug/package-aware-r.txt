@@ -1178,6 +1178,9 @@ drawable outline_arrow_back_24
 drawable outline_arrow_downward_24
 drawable outline_arrow_forward_24
 drawable outline_arrow_upward_24
+drawable r_11
+drawable r_12
+drawable r_13
 drawable rounded_corner
 drawable tooltip_frame_dark
 drawable tooltip_frame_light

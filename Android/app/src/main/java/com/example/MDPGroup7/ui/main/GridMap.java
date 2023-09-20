@@ -83,8 +83,10 @@ public class GridMap extends View {
     private static int[] curCoord = new int[]{-1, -1};
     private static int[] oldCoord = new int[]{-1, -1};
     private static int[] waypointCoord = new int[]{-1, -1};
+    private static ArrayList<int[]> coordList = new ArrayList<>();
     private static ArrayList<String[]> arrowCoord = new ArrayList<>();
     private static ArrayList<int[]> obstacleCoord = new ArrayList<>();
+    private ArrayList<String> l = new ArrayList<>();
     private static boolean autoUpdate = false;
     private static boolean canDrawRobot = false;
     private static boolean setWaypointStatus = false;
@@ -93,6 +95,11 @@ public class GridMap extends View {
     private static boolean unSetCellStatus = false;
     private static boolean setExploredStatus = false;
     private static boolean validPosition = false;
+    private boolean drawImage = false;
+    private String imageResourceId;
+    private RectF rect = new RectF();
+    private Bitmap imageBitmap = null;
+    private ArrayList<Bitmap> imageBitmapList = new ArrayList<>();
     private Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(),
             R.drawable.ic_arrow_error);
 
@@ -189,17 +196,46 @@ public class GridMap extends View {
     // draws obstacle cells whenever map refreshes, pos/correct item selection is here
     private void drawObstacles(Canvas canvas) {
         showLog("Entering drawObstacles");
+        if (drawImage) {
+            for (int a = 0; a < imageBitmapList.size(); a++){
+                oldCoord = coordList.get(a);
+                float left = cells[oldCoord[0]+1][19-oldCoord[1]].startX;
+                float right = cells[oldCoord[0]+1][19-oldCoord[1]].endX;
+                float top = cells[oldCoord[0]+1][19-oldCoord[1]].startY;
+                float bottom = cells[oldCoord[0]+1][19-oldCoord[1]].endY;
+                rect.set(left, top, right, bottom);
+                canvas.drawBitmap(imageBitmapList.get(a), null, rect, null);
+            }
+            drawImage = false;
+        }
+
+        Dictionary<String, String> obstacle_list_1= new Hashtable<>();
+        Enumeration<String> k = obstacle_list.keys();
+        while (k.hasMoreElements()) {
+            String key = k.nextElement();
+            obstacle_list_1.put(key,obstacle_list.get(key));
+        }
+
+        k = obstacle_list_1.keys();
+        while (k.hasMoreElements()) {
+            String key = k.nextElement();
+            if(l.indexOf(key) != -1){
+                obstacle_list_1.remove(key);
+            }
+        }
+
+        k = obstacle_list_1.keys();
+        while (k.hasMoreElements()) {
+            String key = k.nextElement();
+            String[] s = obstacle_list_1.get(key).split(",");
+            oldCoord = new int[]{Integer.parseInt(s[0]), Integer.parseInt(s[1])};
+            float left = cells[oldCoord[0]+1][19-oldCoord[1]].startX+ ((cells[1][1].endX - cells[1][1].startX) / 2);
+            float top = cells[oldCoord[0]+1][19-oldCoord[1]].startY+ ((cells[1][1].endY - cells[1][1].startY) / 2) + 10;
+            canvas.drawText(key,left,top,whitePaint);
+        }
 
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
-                // draw image id
-                canvas.drawText(
-                    ITEM_LIST.get(19-i)[j],
-                    cells[j+1][19-i].startX + ((cells[1][1].endX - cells[1][1].startX) / 2),
-                    cells[j+1][i].startY + ((cells[1][1].endY - cells[1][1].startY) / 2) + 10,
-                    whitePaint
-                );
-
                 // color the face direction
                 switch (imageBearings.get(19-i)[j]) {
                     case "North":
@@ -242,6 +278,23 @@ public class GridMap extends View {
             }
         }
         showLog("Exiting drawObstacles");
+    }
+
+    public void setImageResourceId(String originalId, String resourceId) {
+        this.imageResourceId = resourceId;
+        l.add(originalId);
+        String s = obstacle_list.get(originalId);
+        String[] s1 = s.split(",");
+        int imageResourceId = getResources().getIdentifier(
+                resourceId, "drawable", this.getContext().getPackageName());
+        if (resourceId != "0") {
+            coordList.add(new int[]{Integer.parseInt(s1[0]), Integer.parseInt(s1[1])});
+            imageBitmapList.add(BitmapFactory.decodeResource(getResources(), imageResourceId));
+            drawImage = true;
+        } else {
+            drawImage = false;
+        }
+        this.invalidate(); // Request a redraw
     }
 
     private void drawIndividualCell(Canvas canvas) {
@@ -576,6 +629,31 @@ public class GridMap extends View {
                 cells[x][y].setType("robot");
 
         showLog("Exiting setCurCoord");
+    }
+
+    public void updateRobot(int col, int row, String s){
+        String s1 = "";
+        switch (s){
+            case "N":
+                s1 = "up";
+                break;
+            case "S":
+                s1 = "down";
+                break;
+            case "E":
+                s1 = "right";
+                break;
+            case "W":
+                s1 = "left";
+                break;
+        }
+        robotDirection = s1;
+        this.setStartCoordStatus(true);
+        this.setCurCoord(col,row,s1);
+        this.setStartCoordStatus(false);
+
+        this.invalidate();
+        canDrawRobot = true;
     }
 
     public int[] getCurCoord() {

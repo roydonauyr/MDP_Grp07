@@ -1177,9 +1177,12 @@ int drawable outline_arrow_back_24 0x7f0800b6
 int drawable outline_arrow_downward_24 0x7f0800b7
 int drawable outline_arrow_forward_24 0x7f0800b8
 int drawable outline_arrow_upward_24 0x7f0800b9
-int drawable rounded_corner 0x7f0800ba
-int drawable tooltip_frame_dark 0x7f0800bb
-int drawable tooltip_frame_light 0x7f0800bc
+int drawable r_11 0x7f0800ba
+int drawable r_12 0x7f0800bb
+int drawable r_13 0x7f0800bc
+int drawable rounded_corner 0x7f0800bd
+int drawable tooltip_frame_dark 0x7f0800be
+int drawable tooltip_frame_light 0x7f0800bf
 int id ALT 0x7f090000
 int id CTRL 0x7f090001
 int id ExploreTextView 0x7f090002

@@ -278,8 +278,22 @@ public class MainActivity extends AppCompatActivity {
             String message = intent.getStringExtra("receivedMessage");
             showLog("receivedMessage: message --- " + message);
 
+            try {
+                message = JSONProcessing.JSONStringProcessing(message);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
             if(message.contains(",")) {
                 String[] cmd = message.split(",");
+
+                if(cmd[0].equals("ROBOT")){
+                    gridMap.updateRobot(Integer.valueOf(cmd[1]) + 1,Integer.valueOf(cmd[2]) + 1,cmd[3]);
+                }
+
+                if(cmd[0].equals("TARGET")){
+                    gridMap.setImageResourceId(cmd[1],"r_" + cmd[2]);
+                }
 
                 // check if string is cmd sent by ALG/RPI to get obstacle/image id
                 if (cmd[0].equals("ALG") || cmd[0].equals("RPI")) {
@@ -311,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
                     a = (a / 10) + 1;
                     b = (b / 10) + 1;
 
-                    String direction = cmd[3];
+                    String direction = cmd[2];
 
                     // allow robot to show up on grid if its on the very boundary
                     if (a == 1) a++;
