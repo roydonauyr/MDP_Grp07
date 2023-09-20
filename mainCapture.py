@@ -203,7 +203,8 @@ while True:
 
     # Model path
     #model_weights = Path("C:\\Users\\jarel\\Downloads\\task1_best_noFlip.pt")
-    model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\yolov5v3.pt")
+    #model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\yolov5v3.pt")
+    model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\final.pt")
     model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model
 
     # Access the webcam feed

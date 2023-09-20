@@ -43,7 +43,8 @@ def capture():
 
 # Model path
 #model_weights = Path("C:\\Users\\roydo\\Downloads\\task1_best_noFlip.pt")
-model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\yolov5v3.pt")
+model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\final.pt")
+#model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\yolov5v3.pt")
 #model = torch.hub.load('ultralytics/ultralytics:master', 'custom', path=model_weights)
 model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model
 

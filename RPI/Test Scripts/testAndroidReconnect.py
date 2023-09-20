@@ -28,9 +28,9 @@ if __name__ == "__main__":
     android.connect()
     while True:
         try:
-             time.sleep(20)
+             #time.sleep(20)
              #print("Connected")
-             android.send(AndroidMessage('action', "Start test"))
+             android.send(AndroidMessage('action', "TARGET,1,4"))
         except OSError as e:
              print("Disconnected")
              reconnect_android()
