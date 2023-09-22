@@ -213,7 +213,8 @@ public class ControlFragment extends Fragment {
                     timerHandler.removeCallbacks(timerRunnableExplore);
                 }
                 else if (exploreToggleBtn.getText().equals("STOP")) {
-                    String msg = gridMap.getObstacles();
+                    gridMap.submitChange();
+                    String msg = "{\"type\": \"obstacles\",\"value\": \"start\"}";
                     MainActivity.printMessage(msg);
                     MainActivity.stopTimerFlag = false;
                     showToast("Auto Movement/ImageRecog timer start!");
@@ -240,11 +241,9 @@ public class ControlFragment extends Fragment {
                 }
                 else if (fastestToggleBtn.getText().equals("STOP")) {
                     showToast("Fastest car timer start!");
-                    try {
-                        MainActivity.printMessage("STM|G");
-                    } catch (Exception e) {
-                        showLog(e.getMessage());
-                    }
+                    gridMap.submitChange();
+                    String msg = "{\"type\": \"obstacles\",\"value\": \"start\"}";
+                    MainActivity.printMessage(msg);
                     MainActivity.stopWk9TimerFlag = false;
                     robotStatusTextView.setText("Fastest Car Started");
                     fastestTimer = System.currentTimeMillis();
@@ -267,6 +266,20 @@ public class ControlFragment extends Fragment {
                     exploreButton.toggle();
                 timerHandler.removeCallbacks(timerRunnableExplore);
                 showLog("Exiting exploreResetImageBtn");
+            }
+        });
+
+        fastestResetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLog("Clicked fastestResetImageBtn");
+                showToast("Resetting fastest time...");
+                fastestTimeTextView.setText("00:00");
+                robotStatusTextView.setText("Not Available");
+                if(fastestButton.isChecked())
+                    fastestButton.toggle();
+                timerHandler.removeCallbacks(timerRunnableFastest);
+                showLog("Exiting fastestResetImageBtn");
             }
         });
 
