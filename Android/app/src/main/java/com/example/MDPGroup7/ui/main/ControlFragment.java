@@ -213,8 +213,8 @@ public class ControlFragment extends Fragment {
                     timerHandler.removeCallbacks(timerRunnableExplore);
                 }
                 else if (exploreToggleBtn.getText().equals("STOP")) {
-                    gridMap.submitChange();
-                    String msg = "{\"type\": \"obstacles\",\"value\": \"start\"}";
+                    //gridMap.submitChange();
+                    String msg = "{\"type\": \"action\",\"value\": \"start\"}";
                     MainActivity.printMessage(msg);
                     MainActivity.stopTimerFlag = false;
                     showToast("Auto Movement/ImageRecog timer start!");
@@ -241,8 +241,8 @@ public class ControlFragment extends Fragment {
                 }
                 else if (fastestToggleBtn.getText().equals("STOP")) {
                     showToast("Fastest car timer start!");
-                    gridMap.submitChange();
-                    String msg = "{\"type\": \"obstacles\",\"value\": \"start\"}";
+                    //gridMap.submitChange();
+                    String msg = "{\"type\": \"action\",\"value\": \"start\"}";
                     MainActivity.printMessage(msg);
                     MainActivity.stopWk9TimerFlag = false;
                     robotStatusTextView.setText("Fastest Car Started");

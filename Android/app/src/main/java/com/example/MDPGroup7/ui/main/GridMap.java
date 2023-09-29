@@ -1257,6 +1257,7 @@ public class GridMap extends View {
         mapDrawn = false;
         canDrawRobot = false;
         validPosition = false;
+        obstacle_list = new Hashtable<>();
         Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.ic_arrow_error);
 
