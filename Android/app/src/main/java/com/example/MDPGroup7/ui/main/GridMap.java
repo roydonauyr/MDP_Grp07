@@ -188,6 +188,7 @@ public class GridMap extends View {
         if (getCanDrawRobot())
             drawRobot(canvas, curCoord);
         drawArrow(canvas, arrowCoord);
+        drawImage = true;
         drawObstacles(canvas);
 
         showLog("Exiting onDraw");
@@ -1281,7 +1282,7 @@ public class GridMap extends View {
             String key = k.nextElement();
             String s = obstacle_list.get(key);
             String[] l = s.split(",");
-            if(i != 0) msg += ";\n";
+            if(i != 0) msg += ",\n";
             msg += "{\"x\":" + l[0] + ", \"y\": " + l[1] + ", \"id\": " + key + ", \"d\": " + l[2] + "}";
             i++;
         }

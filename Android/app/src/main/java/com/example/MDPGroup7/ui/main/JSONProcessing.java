@@ -47,7 +47,11 @@ public class JSONProcessing {
             String image_key = obj1.getString("image_id");
             String obstacle_id = obj1.getString("obstacle_id");
             String image_id = image_dict.get(image_key);
-            String s = "TARGET," + obstacle_id + "," + image_id;
+            String s = "TARGET," + obstacle_id + ",";
+            if(image_id == null)
+                s += image_key;
+            else
+                s += image_id;
             return s;
         }
 
@@ -60,10 +64,10 @@ public class JSONProcessing {
                     s1 = "N";
                     break;
                 case "2":
-                    s1 = "S";
+                    s1 = "E";
                     break;
                 case "4":
-                    s1 = "E";
+                    s1 = "S";
                     break;
                 case "6":
                     s1 = "W";

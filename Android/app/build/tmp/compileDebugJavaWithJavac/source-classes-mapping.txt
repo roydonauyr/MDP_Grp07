@@ -68,8 +68,8 @@ androidx/savedstate/R.java
  androidx.savedstate.R
 com/example/MDPGroup7/Constants.java
  com.example.MDPGroup7.Constants
-com/example/MDPGroup7/ui/main/JSONProcessing.java
- com.example.MDPGroup7.ui.main.JSONProcessing
+androidx/localbroadcastmanager/R.java
+ androidx.localbroadcastmanager.R
 com/example/MDPGroup7/R.java
  com.example.MDPGroup7.R
  com.example.MDPGroup7.R$anim
@@ -386,8 +386,8 @@ androidx/viewpager/R.java
  androidx.viewpager.R$string
  androidx.viewpager.R$style
  androidx.viewpager.R$styleable
-androidx/localbroadcastmanager/R.java
- androidx.localbroadcastmanager.R
+com/example/MDPGroup7/ui/main/JSONProcessing.java
+ com.example.MDPGroup7.ui.main.JSONProcessing
 com/example/MDPGroup7/MainActivity.java
  com.example.MDPGroup7.MainActivity
  com.example.MDPGroup7.MainActivity$1
