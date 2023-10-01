@@ -55,8 +55,12 @@ class RaspberryPi:
             self.stm.connect() # Connect via serial
             self.pc.connect() # Connect via socket, rpi ip address
             self.check_api() # Checks if api of algo server is running
+            # self.request_algo({
+            #     "obstacles": [{"x": 1, "y": 7, "id": 1, "d": 2}],
+            #     "mode": "0"
+            # })
             self.request_algo({
-                "obstacles": [{"x": 7, "y": 1, "id": 1, "d": 6}],
+                "obstacles": [{"x": 1, "y": 7, "id": 1, "d": 2}],
                 "mode": "0"
             })
 
@@ -140,7 +144,7 @@ class RaspberryPi:
             stm_prefix = ("SF", "SB", "RF", "RB", "LF", "LB", "JF", "JB", "KF", "KB")
 
             if command.startswith(stm_prefix):
-                time.sleep(1)
+                #time.sleep(1)
                 self.stm.send(command)
                 print(f"Sending to stm: {command}")
             elif command.startswith("CAP"):

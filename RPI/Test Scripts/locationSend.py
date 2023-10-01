@@ -50,7 +50,7 @@ class RaspberryPi:
             # Sending location
             self.current_location['x'] = 12
             self.current_location['y'] = 9
-            self.current_location['d'] = 0 # 0 is North
+            self.current_location['d'] = "N" # 0 is North
             print(f"Current location: {self.current_location}")
             #self.logger.info(f"self.current_location = {self.current_location}")
             self.android_queue.put(AndroidMessage('location', {

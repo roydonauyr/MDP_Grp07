@@ -2,6 +2,7 @@ from Communication.android import Android, AndroidMessage
 from multiprocessing import Process, Manager
 from typing import Optional
 import time
+import json
 
 def reconnect_android():
         """
@@ -27,11 +28,26 @@ if __name__ == "__main__":
     android = Android()
     android.connect()
     while True:
+        message_rcv: Optional[str] = None
         try:
-             #time.sleep(20)
-             #print("Connected")
-             android.send(AndroidMessage('action', "TARGET,1,4"))
+             #android.send(AndroidMessage('action', "TARGET,1,20"))
+             android.send(AndroidMessage('action', "ROBOT,12,9,N"))
+             print("message sent")
+             time.sleep(20)
+             break
+            
         except OSError as e:
              print("Disconnected")
              reconnect_android()
              android.send(AndroidMessage('general', "Reconnected."))
+
+#     while True:
+#         message_rcv: Optional[str] = None
+#         try:
+#              message_rcv = android.receive()
+#              break
+#         except OSError as e:
+#              print("Disconnected")
+#              reconnect_android()
+#              android.send(AndroidMessage('general', "Reconnected."))
+        

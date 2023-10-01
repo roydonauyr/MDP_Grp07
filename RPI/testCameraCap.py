@@ -25,6 +25,7 @@ class RaspberryPi:
         #self.logger = prepare_logger()
         self.pc = PC()
         self.manager = Manager()
+        self.streamOn = False
 
         # Event set
         self.unpause = self.manager.Event()
@@ -71,12 +72,16 @@ class RaspberryPi:
             self.pc.disconnect()
             print("Program Ended\n")
 
+
     def command_execute(self) -> None:
         """
         [Child Process] 
         """
         while True:
             # Retrieve next movement command
+            print("Sleep Process First")
+            time.sleep(20)
+            print("Capturing")
             command: str = self.command_queue.get()
             
             print("Wait for movelock")

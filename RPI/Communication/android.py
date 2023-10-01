@@ -131,14 +131,14 @@ class Android(Link):
             os.system("sudo hciconfig hci0 piscan")
             
             # Initialize server socket
-            port = 1
+            #port = 1
             self.server_socket = bt.BluetoothSocket(bt.RFCOMM)
-            self.server_socket.bind((self.hostId, port))
-            #self.server_socket.bind((self.hostId, bt.PORT_ANY))
+            #self.server_socket.bind((self.hostId, port))
+            self.server_socket.bind((self.hostId, bt.PORT_ANY))
             self.server_socket.listen(1)
 
             # Parameters
-            #port = self.server_socket.getsockname()[1]
+            port = self.server_socket.getsockname()[1]
             
 
             # Advertise
