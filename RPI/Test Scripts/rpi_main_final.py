@@ -68,14 +68,13 @@ class RaspberryPi:
         self.process_android_sender = None
         self.process_command_execute = None
         self.process_rpi_action = None
+        self.process_start_stream = None
         self.ack_flag = False
 
         # Lists
         self.success_obstacles = self.manager.list()
-        self.failed_obstacles = self.manager.list()
         self.obstacles = self.manager.dict() # Dictionary of obstacles
         self.current_location = self.manager.dict() # Current location coordinates
-        self.failed_attempt = False
 
      
     def start(self):
@@ -96,6 +95,7 @@ class RaspberryPi:
             self.process_android_sender = Process(target=self.android_sender)
             self.process_command_execute = Process(target=self.command_execute)
             self.process_rpi_action = Process(target=self.rpi_action)
+            self.process_start_stream = Process(target=self.pc.camera_stream)
 
             # Start processes
             self.process_android_receive.start() # Receive from android
@@ -103,6 +103,7 @@ class RaspberryPi:
             self.process_android_sender.start() # Send out information to be displayed on Android
             self.process_command_execute.start() # Commands to Send Out To STM
             self.process_rpi_action.start() # Different RPI Actions (1. Receive obstacles and send to algo)
+            self.process_start_stream.start() # Start Camera Streaming for Capture Of Image
 
             # self.logger.info("Child Processes started")
             print("Child processes started!\n")
@@ -325,62 +326,41 @@ class RaspberryPi:
             print("Wait for unpause")
             #self.logger.debug("wait for unpause")
             # Wait for unpause event to set [Main Trigger]
-            try:
-                print("wait for retrylock")
-                #self.logger.debug("wait for retrylock")
-                self.retrylock.acquire()
-                self.retrylock.release()
-            except: # Will go here since retrylock not instantiated yet
-                print("Wait for unpause event to be set")
-                #self.logger.debug("wait for unpause")
-                self.unpause.wait()
+            # try:
+            #     print("wait for retrylock")
+            #     #self.logger.debug("wait for retrylock")
+            #     self.retrylock.acquire()
+            #     self.retrylock.release()
+            # except: # Will go here since retrylock not instantiated yet
+            #     print("Wait for unpause event to be set")
+            #     #self.logger.debug("wait for unpause")
+            self.unpause.wait() # Wait until queue is not empty
             print("Wait for movelock")
             #self.logger.debug("wait for movelock")
             self.movement_lock.acquire() # Acquire lock first (needed for both moving, and capturing pictures)
 
             # STM32 Commands - Send straight to STM32
-            stm_prefix = ("FS", "BS", "FW", "BW", "FL", "FR", "BL",
-                            "BR", "TL", "TR", "A", "C", "DT", "STOP", "ZZ", "RS")
+            stm_prefix = ("SF", "SB", "RF", "RB", "LF", "LB", "JF", "JB", "KF", "KB")
+
             if command.startswith(stm_prefix):
                 self.stm.send(command)
                 print(f"Sending to stm: {command}")
                 #self.logger.debug(f"Sending to STM32: {command}")
-
             # Snap command
             elif command.startswith("CAP"):
                 obstacle_id_with_signal = command.replace("CAP", "")
-
                 self.rpi_action_queue.put(RPiAction(type="cap", value=obstacle_id_with_signal))
 
             # End of path
             elif command == "FIN":
-                print(f"At finish, obstacle failed: {self.failed_obstacles}")
                 print(f"Currect location: {self.current_location}")
-                #self.logger.info(f"At FIN, self.failed_obstacles: {self.failed_obstacles}")
-                #self.logger.info(f"At FIN, self.current_location: {self.current_location}")
-                # if len(self.failed_obstacles) != 0 and self.failed_attempt == False:
-
-                #     new_obstacle_list = list(self.failed_obstacles)
-                #     for i in list(self.success_obstacles):
-                #         # {'x': 5, 'y': 11, 'id': 1, 'd': 4}
-                #         i['d'] = 8
-                #         new_obstacle_list.append(i)
-
-                #     self.logger.info("Attempting to go to failed obstacles")
-                #     self.failed_attempt = True
-                #     self.request_algo({'obstacles': new_obstacle_list, 'mode': '0'},
-                #                     self.current_location['x'], self.current_location['y'], self.current_location['d'], retrying=True)
-                #     self.retrylock = self.manager.Lock()
-                #     self.movement_lock.release()
-                #     continue
-
                 self.unpause.clear()
                 self.movement_lock.release()
                 print("Commands queue finished, all photos completed.")
-                #self.logger.info("Commands queue finished.")
                 self.android_queue.put(AndroidMessage("general", "Commands queue finished."))
                 self.android_queue.put(AndroidMessage("status", "finished"))
-                self.rpi_action_queue.put(RPiAction(type="stitch", value=""))
+                self.stop()
+                #self.rpi_action_queue.put(RPiAction(type="stitch", value=""))
             else:
                 raise Exception(f"Unknown command: {command}")
             
@@ -392,15 +372,14 @@ class RaspberryPi:
             action: RPiAction = self.rpi_action_queue.get()
             print(f"RPI action retreived from queue: {action.type} : {action.value}")
             #self.logger.debug(f"PiAction retrieved from queue: {action.type} {action.value}")
-
             if action.type == "obstacles":
                 for obs in action.value['obstacles']:
                     self.obstacles[obs['id']] = obs
                 self.request_algo(action.value) # Send the whole dict into request_algo, including mode
             elif action.type == "cap":
                 self.cap_and_rec(obstacle_id_with_signal=action.value)
-            elif action.type == "stitch":
-                self.request_stitch()
+            # elif action.type == "stitch":
+            #     self.request_stitch()
 
     def request_algo(self, data, car_x=1, car_y=1, car_d=0, retrying=False):
         """
@@ -462,33 +441,23 @@ class RaspberryPi:
         #self.logger.info(f"Capturing image for obstacle id: {obstacle_id}")
         print(f"Turn on video stream for obstacle id: {obstacle_id}")
         self.android_queue.put(AndroidMessage("general", f"Capturing image for obstacle id: {obstacle_id}"))
-        #url = f"http://{API_IP}:{API_PORT}/image"
 
         try:
+            self.pc.send("Image Rec Start")
             results = self.pc.camera_cap()
         except Exception as e:
-            print("Error in api: %s\n", str(e))
+            print("Error in sending/receiving message: %s\n", str(e))
 
         # release lock so that bot can continue moving
         self.movement_lock.release()
-        # try:
-        #     self.retrylock.release()
-        # except:
-        #     pass
 
         print(f"Results: {results}")
         #self.logger.info(f"results: {results}")
         #self.logger.info(f"self.obstacles: {self.obstacles}")
         #self.logger.info(f"Image recognition results: {results} ({SYMBOL_MAP.get(results['image_id'])})")
 
-        if results == 'NA':
-            self.failed_obstacles.append(self.obstacles[int(results['obstacle_id'])])
-            print(f"Failed obstacle: {obstacle_id}")
-            #self.logger.info(f"Added Obstacle {results['obstacle_id']} to failed obstacles.")
-            #self.logger.info(f"self.failed_obstacles: {self.failed_obstacles}")
-        else:
-            self.success_obstacles.append(self.obstacles[int(results['obstacle_id'])])
-            #self.logger.info(f"self.success_obstacles: {self.success_obstacles}")
+        #self.success_obstacles.append(self.obstacles[int(results['obstacle_id'])])
+        #self.logger.info(f"self.success_obstacles: {self.success_obstacles}")
         self.android_queue.put(AndroidMessage("imageRec", results))
 
 if __name__ == "__main__":

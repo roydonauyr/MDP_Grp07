@@ -62,7 +62,7 @@ If there are no commands in the queue, RPI will respond with an error to Android
 
 ### Image Recognition
 Message format when sending from RPI to Android after predictions have been received so that Android can update the results of the image recognition
-{"type": "imageRec", "value": {"image_id": "A", "obstacle_id":  "1"}}
+{"type": "imageRec", "value": {"image_id": "21", "obstacle_id":  "1"}}
 
 ### Location Updates
 Message format when sending from RPI to Android to update the location of the robot periodically

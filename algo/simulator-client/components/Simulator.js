@@ -170,13 +170,14 @@ export default function Simulator() {
     let newTime = time
 
     for (let x of commands) {
-      console.log(x)
-      if (x.startsWith("FW") || x.startsWith("BW")) {
+      let units = x.substring(2,4)
+      
+      if (x.startsWith("SF") || x.startsWith("SB")) {
         // console.log(x[2])
-        newTime += FORWARD_TIME * x[2];
+        newTime += FORWARD_TIME * units;
         // console.log(newTime)
       }
-      else if (x.startsWith("BR") || x.startsWith("BL") || x.startsWith("FR") || x.startsWith("FL")) {
+      else if (x.startsWith("RB") || x.startsWith("LB") || x.startsWith("RF") || x.startsWith("LF")) {
         newTime += TURN_TIME;
         // console.log(newTime)
       }
@@ -198,7 +199,7 @@ export default function Simulator() {
 
         const commands = []
         for (let x of data.data.data.commands) {
-          if (x.startsWith("SNAP")) {
+          if (x.startsWith("CAP")) {
             continue;
           }
           commands.push(x)

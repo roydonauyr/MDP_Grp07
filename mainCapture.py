@@ -46,7 +46,7 @@ def receive() -> Optional[str]:
         #self.logger.debug(f"Received from PC: {message}")
         return message
     except OSError as e:  # connection broken, try to reconnect
-        print("Message failed to be received: %s", str(e))
+        #print("Message failed to be received: %s", str(e))
         #self.logger.error(f"Error receiving message from PC: {e}")
         raise e
 
@@ -67,19 +67,19 @@ def capture(expected):
             continue
     
         # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        img_gray = cv2.resize(image, (640, 640))
+        #img_gray = cv2.resize(image, (640, 640))
 
         # recognition
-        results = model(img_gray)
-        output_frame = results.render()[0]
-        cv2.imshow('Object Detection', output_frame)
+        results = model(image)
+        #output_frame = results.render()[0]
+        #cv2.imshow('Object Detection', output_frame)
 
         class_dict = results.names
         
         # """Filter out predictions with confidence less than 0.7"""
         #Convert each prediction to a list
         res = []
-        boxes = results.xywh[0]
+        boxes = results.xywh[0] # Access the most confident bounding box
         boxes = boxes.tolist()
 
         #Nothing detected, empty tensor
@@ -93,9 +93,6 @@ def capture(expected):
             # if box[1] > 231 and box[3] < 50:
             #     continue
             # # Filter by confidence level
-            # elif box[4] > THRESHOLD:
-            #     res.append(box)
-            print(box)
             if box[4] > THRESHOLD:
                 res.append(box)
 
@@ -103,10 +100,10 @@ def capture(expected):
         #Remove the bulleyes
         for i in range(len(res)):
             detected_class = class_dict.get(int(res[i][5]))
-            if(detected_class != "41"):
+            if(detected_class != "bullseye"):
                 new_res.append(res[i])
 
-        if len(new_res) > 0:
+        if len(new_res) > 0: # Replace biggest bounding box
             # biggest_box, mid = res[0], abs(int(res[0][0] - 308))
             # for box in res:
             #     midpoint = abs(int(box[0] - 308))
@@ -120,9 +117,9 @@ def capture(expected):
                 if box[2] * box[3] > biggest_box[2] * biggest_box[3]:
                     biggest_box = box
         else:
-            #Image detected but low accuracy
-            print("Low accuracy image")
+            print("Low accuracy image") #Image detected but low accuracy
             continue
+       
         # Print out the x1, y1, w, h, confidence, and class of predicted object
         x, y, w, h, conf, cls_num = biggest_box
         cls = str(int(cls_num))
@@ -130,12 +127,7 @@ def capture(expected):
         x, y, w, h, conf, cls = int(x), int(y), int(w), int(h), round(conf, 2), class_dict.get(int(cls))
         print("Found: {}, {}, {}, {}, {}, {}".format(x, y, w, h, conf, cls))
         
-        # #Send image capture to Bluetooth
-        # msg_img = "AN|" + "TARGET," + id + ","+ cls
-        # s.send(msg_img.encode())
-        # time.sleep(0.5)
-
-    #     """how much is the median_detected off from the median_landscape; l is negative, r is positive"""
+#     """how much is the median_detected off from the median_landscape; l is negative, r is positive"""
         median_landscape = 640 / 2
         median_detected = x
         median_diff = median_detected - median_landscape
@@ -194,16 +186,17 @@ expected = {}
 
 while True:
     message: Optional[str] = None
-    message = receive()
-    if message == None:
-        print("Waiting for image capture instruction")
+    try:
+        message = receive()
+    except Exception as e:
+        #print("Waiting for image capture instruction")
         continue
     
     image_dict = {'11': '1', '12': '2', '13': '3', '14': '4', '15': '5', '16': '6', '17': '7', '18': '8', '19': '9', "20": "A", "21":"B", "22": "C", "23": "D", "24": "E", "25":"F", "26": "G", "27": "H", "28": "S", "29": "T", "30": "U", "31": "V", "32": "W","33": "X", "34": "Y", "35": "Z", "36": "UP", "37" : "DOWN", "38": "RIGHT", "39": "LEFT", "40": "STOP"} 
 
     # Model path
-    #model_weights = Path("C:\\Users\\jarel\\Downloads\\task1_best_noFlip.pt")
-    model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\yolov5v3.pt")
+    #model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\ks.pt")
+    model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\final.pt")
     model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model
 
     # Access the webcam feed
@@ -211,7 +204,8 @@ while True:
 
     returned_result = capture(expected)
     if returned_result != None:
-        send("Result is: " + returned_result)
+        # send("Result is: " + returned_result)
+        send(returned_result)
     else:
         print(returned_result)
         print("Nothing captured")

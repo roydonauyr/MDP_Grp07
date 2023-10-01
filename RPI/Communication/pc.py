@@ -1,5 +1,6 @@
 from Communication.link import Link
 from typing import Optional
+from multiprocessing import Manager
 import socket
 import sys
 import time
@@ -21,6 +22,8 @@ class PC(Link):
         # Stream on or off
         self.streamOn = False
 
+        self.manager = Manager()
+        self.switchStream = self.manager.Event()
         # For image rec
         self.StreamProps = ps.StreamProps
 
@@ -143,6 +146,8 @@ class PC(Link):
                             self.server = ps.Streamer(self.address, self.StreamProps)
                             print('Server started at','http://' + self.address[0] + ':' + str(self.address[1]))
                             self.server.serve_forever()
+                            print("Put stream to sleep")
+                            self.switchStream.wait()
                             print("Recording Stopped")
 
                         finally:
@@ -156,9 +161,41 @@ class PC(Link):
               
         while True:
             message: Optional[str] = None
-            message = self.receive()
+            try:
+                message = self.receive()
+                if message != None:
+                    return message
+            except Exception as e:
+                #print("Waiting for image capture instruction")
+                continue
 
-            if message.startswith("Result"):
-                return message
+            # if message.startswith("Result"):
+            #     return message
+            
+            
+    def old_camera_cap(self) -> str:
+      
+        with picamera.PiCamera(resolution='1280x720', framerate=5) as self.camera:
+            self.output = ps.StreamOut()
+            self.StreamProps.set_Output(self.StreamProps, self.output)
+            self.camera.rotation = 0
+            self.camera.start_recording(self.output, format='mjpeg')
+            output = None
+            try:
+                self.server = ps.Streamer(self.address, self.StreamProps)
+                print('Server started at','http://' + self.address[0] + ':' + str(self.address[1]))
+                self.server.serve_forever()
+                self.send("Capture")
+                print("Capture")
+                while True:
+                    message: Optional[str] = None
+                    message = self.receive()
+
+                    if message is None:
+                        continue
+                    output = message
+            finally:
+                self.camera.stop_recording()
+                return output
             
             
