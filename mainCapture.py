@@ -59,6 +59,11 @@ def capture(expected):
     """Capture the last image from cv2.videocapture()"""
     cap.open("http://192.168.7.7:5000/stream.mjpg")
 
+    counter = 0
+    counter_nothing = 0
+    count_nothing = 0
+    count_low = 0
+
     while True:
         ret, image = cap.read()
 
@@ -67,12 +72,12 @@ def capture(expected):
             continue
     
         # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        #img_gray = cv2.resize(image, (640, 640))
+        img_gray = cv2.resize(image, (640, 640))
 
         # recognition
-        results = model(image)
-        #output_frame = results.render()[0]
-        #cv2.imshow('Object Detection', output_frame)
+        results = model(img_gray)
+        output_frame = results.render()[0]
+        cv2.imshow('Object Detection', output_frame)
 
         class_dict = results.names
         
@@ -85,6 +90,13 @@ def capture(expected):
         #Nothing detected, empty tensor
         if len(boxes) == 0:
             print("Nothing captured") # In future implement here send back to move car forward
+            counter_nothing = counter_nothing + 1
+            if (counter_nothing >= 3):
+                counter_nothing = 0
+                count_nothing += 1
+                cv2.imwrite(f"./detected_images/{count_nothing}.png",
+                    results.ims[0])
+                return "11"
             continue
         
         """xywh: x,y coordiaante of the center of the bounding box. w,h width height of the bounding box"""
@@ -118,7 +130,16 @@ def capture(expected):
                     biggest_box = box
         else:
             print("Low accuracy image") #Image detected but low accuracy
+            counter = counter + 1
+            if (counter >= 3):
+                counter = 0
+                count_low += 1
+                cv2.imwrite(f"./detected_images/{count_low}.png",
+                    results.ims[0])
+                return "11"
             continue
+            
+                 
        
         # Print out the x1, y1, w, h, confidence, and class of predicted object
         x, y, w, h, conf, cls_num = biggest_box
@@ -174,6 +195,32 @@ def capture(expected):
         cv2.destroyAllWindows()
         return reply["class_num"]
 
+def stitch(expected):
+    """Stitched the images together. The directory of each image is found in the argument expected on dictionary value[7]."""
+    list_of_images = []
+    for key in expected.keys():
+        list_of_images.append(expected[key][7])
+    print("Stitching these images: ", list_of_images)
+    widths, heights = zip(*(Image.open(i).size for i in list_of_images))
+    total_width = max(widths)*int((len(list_of_images)+1)/2)
+    max_height = max(heights)*2
+    new_im = Image.new('RGB', (total_width, max_height))
+    x_offset = 0
+    y_offset = 0
+    counter = 0
+    for im in list_of_images:
+        im = Image.open(im)
+        print(f"X: {x_offset}, Y: {y_offset}")
+        new_im.paste(im, (x_offset, y_offset))
+        counter += 1
+        if counter%2 == 0:
+            x_offset += im.size[0]
+            y_offset = 0
+        else:
+            y_offset += im.size[1]
+
+    new_im.save('./Stitched_Images/final_stitched.png')
+
 # Socket connection with RPI
 host = "192.168.7.7"
 port = 12345
@@ -181,6 +228,8 @@ buffer = 1024
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((host, port))
 print("Socket Connected")
+model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYX.pt")
+model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) 
 
 expected = {}
 
@@ -196,8 +245,7 @@ while True:
 
     # Model path
     #model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\ks.pt")
-    model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\final.pt")
-    model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model
+    # Load the YOLOv5 model
 
     # Access the webcam feed
     cap = cv2.VideoCapture()  # 0 for the default camera, you can specify a different camera if needed
@@ -209,3 +257,8 @@ while True:
     else:
         print(returned_result)
         print("Nothing captured")
+
+    if(message == "Stitch"):
+        stitch(expected)
+        print("Program ended!")
+        break

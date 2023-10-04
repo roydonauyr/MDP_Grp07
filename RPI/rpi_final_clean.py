@@ -65,7 +65,7 @@ class RaspberryPi:
         self.process_receive_stm = None
         self.process_command_execute = None
         self.process_start_stream = None
-        #self.ack_flag = False
+        self.ack_flag = False
 
         # Lists
         self.obstacles = self.manager.dict() # Dictionary of obstacles
@@ -308,6 +308,7 @@ class RaspberryPi:
         """
         while True:
             # Retrieve next movement command
+            #print(self.command_queue)
             command: str = self.command_queue.get()
             print("Wait for unpause")
             self.unpause.wait() # Wait until command queue is not empty
@@ -316,6 +317,7 @@ class RaspberryPi:
 
             # STM32 Commands - Send straight to STM32
             stm_prefix = ("SF", "SB", "RF", "RB", "LF", "LB", "JF", "JB", "KF", "KB")
+            #stm_prefix = ("FW", "FR", "FL",  "BW", "BR", "BL")
 
             if command.startswith(stm_prefix):
                 self.stm.send(command)
@@ -330,6 +332,7 @@ class RaspberryPi:
             # End of path
             elif command == "FIN":
                 print(f"Currect location: {self.current_location}")
+                self.pc.send("Stitch")
                 self.unpause.clear()
                 self.movement_lock.release()
                 print("Commands queue finished, all photos completed.")
@@ -388,6 +391,7 @@ class RaspberryPi:
             self.command_queue.put(c)
         for p in path[1:]:  # ignore first element as it is the starting position of the robot
             self.path_queue.put(p)
+            #print(p)
 
         message: AndroidMessage = AndroidMessage("general", "Commands and path received Algo API. Robot is ready to move.")
         try:
