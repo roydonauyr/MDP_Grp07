@@ -39,6 +39,13 @@ class RaspberryPi:
         # Queues
         self.command_queue = self.manager.Queue()
         self.command_queue.put("CAP")
+        self.command_queue.put("CAP")
+        self.command_queue.put("CAP")
+        self.command_queue.put("CAP")
+        self.command_queue.put("CAP")
+        self.command_queue.put("CAP")
+        self.command_queue.put("CAP")
+        #self.command_queue.put("CAP")
         self.command_queue.put("FIN")
 
         # Lists
@@ -80,7 +87,7 @@ class RaspberryPi:
         while True:
             # Retrieve next movement command
             print("Sleep Process First")
-            time.sleep(20)
+            time.sleep(3)
             print("Capturing")
             command: str = self.command_queue.get()
             
@@ -93,6 +100,7 @@ class RaspberryPi:
                 print(message)
                 self.movement_lock.release()
             elif command.startswith("FIN"):
+                self.pc.send("Stitch")
                 self.stop() 
             else:
                 print("Error in commands")
