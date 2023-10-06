@@ -46,13 +46,19 @@ public class JSONProcessing {
             JSONObject obj1 = new JSONObject(obj.getString("value"));
             String image_key = obj1.getString("image_id");
             String obstacle_id = obj1.getString("obstacle_id");
-            String image_id = image_dict.get(image_key);
-            String s = "TARGET," + obstacle_id + ",";
-            if(image_id == null)
-                s += image_key;
-            else
-                s += image_id;
-            return s;
+            if(image_key.equals("0")){
+                return "Image Not Recognized";
+            }
+            else{
+                String image_id = image_dict.get(image_key);
+                String s = "TARGET," + obstacle_id + ",";
+                if(image_id == null)
+                    s += image_key;
+                else
+                    s += image_id;
+                return s;
+            }
+
         }
 
         if(type.equals("location")){

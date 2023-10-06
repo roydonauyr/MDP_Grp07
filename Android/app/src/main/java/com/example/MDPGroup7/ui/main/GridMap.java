@@ -100,6 +100,7 @@ public class GridMap extends View {
     private RectF rect = new RectF();
     private Bitmap imageBitmap = null;
     private ArrayList<Bitmap> imageBitmapList = new ArrayList<>();
+    private ArrayList<String> obstacle_target_list = new ArrayList<>();
     private Bitmap arrowBitmap = BitmapFactory.decodeResource(getResources(),
             R.drawable.ic_arrow_error);
 
@@ -199,13 +200,19 @@ public class GridMap extends View {
         showLog("Entering drawObstacles");
         if (drawImage) {
             for (int a = 0; a < imageBitmapList.size(); a++){
-                oldCoord = coordList.get(a);
-                float left = cells[oldCoord[0]+1][19-oldCoord[1]].startX;
-                float right = cells[oldCoord[0]+1][19-oldCoord[1]].endX;
+                String s = obstacle_target_list.get(a);
+                String[] s_1 = s.split(",");
+                //oldCoord = coordList.get(Integer.parseInt(s1[0]));
+                String s1 = obstacle_list.get(s_1[0]);
+                String[] s_2 = s1.split(",");
+                String[] s_3 = s_1[1].split("_");
+                oldCoord = new int[]{Integer.parseInt(s_2[0]), Integer.parseInt(s_2[1])};
+                float left = (float) (cells[oldCoord[0]+1][19-oldCoord[1]].startX + 0.5 * (cells[oldCoord[0]+1][19-oldCoord[1]].endX - cells[oldCoord[0]+1][19-oldCoord[1]].startX));
+                float right = (float) (cells[oldCoord[0]+1][19-oldCoord[1]].endX + 0.5 * (cells[oldCoord[0]+1][19-oldCoord[1]].endX - cells[oldCoord[0]+1][19-oldCoord[1]].startX));
                 float top = cells[oldCoord[0]+1][19-oldCoord[1]].startY;
                 float bottom = cells[oldCoord[0]+1][19-oldCoord[1]].endY;
                 rect.set(left, top, right, bottom);
-                canvas.drawBitmap(imageBitmapList.get(a), null, rect, null);
+                canvas.drawText(s_3[1], left, bottom, whitePaint);
             }
             drawImage = false;
         }
@@ -284,6 +291,8 @@ public class GridMap extends View {
     public void setImageResourceId(String originalId, String resourceId) {
         this.imageResourceId = resourceId;
         l.add(originalId);
+        String s0 = originalId + "," + resourceId;
+        obstacle_target_list.add(s0);
         String s = obstacle_list.get(originalId);
         String[] s1 = s.split(",");
         int imageResourceId = getResources().getIdentifier(
