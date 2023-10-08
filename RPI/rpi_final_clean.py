@@ -239,8 +239,9 @@ class RaspberryPi:
 
                     # Commencing path following if command queue has been populated from algo
                     if not self.command_queue.empty():
-                        # print("Gyro Reset")
-                        # self.stm.send("RS00")
+                        print("Gyro Reset")
+                        self.stm.send("T") #RSOO
+                        time.sleep(10)
 
                         # Main trigger to start movement #
                         self.unpause.set() # Set event unpause

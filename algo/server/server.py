@@ -72,10 +72,10 @@ def path_finding():
             continue
         if command.startswith("FIN"):
             continue
-        elif command.startswith("FW") or command.startswith("FS"):
+        elif command.startswith("SF") or command.startswith("FS"):
             i += int(command[2:]) // 10
             print(int(command[2:]))
-        elif command.startswith("BW") or command.startswith("BS"):
+        elif command.startswith("SB") or command.startswith("BS"):
             i += int(command[2:]) // 10
         else:
             i += 1
@@ -138,10 +138,10 @@ def nav_around_obstacle():
             continue
         if command.startswith("FIN"):
             continue
-        elif command.startswith("FW") or command.startswith("FS"):
+        elif command.startswith("SF") or command.startswith("FS"):
             i += int(command[2:]) // 10
             print(int(command[2:]))
-        elif command.startswith("BW") or command.startswith("BS"):
+        elif command.startswith("SB") or command.startswith("BS"):
             i += int(command[2:]) // 10
         else:
             i += 1
