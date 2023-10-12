@@ -4,31 +4,13 @@ import time
 from multiprocessing import Process, Manager
 from typing import Optional
 import os
+import requests
 from Communication.android import Android, AndroidMessage
 from Communication.stm import STM
+from Communication.pc import PC
 #from logger import prepare_logger
+from Others.configuration import API_IP, API_PORT
 
-class RPiAction:
-    """
-    Class that represents an action that the RPi needs to take.    
-    """
-
-    def __init__(self, type, value):
-        """
-        :param cat: The category of the action. Can be 'info', 'mode', 'path', 'snap', 'obstacle', 'location', 'failed', 'success'
-        :param value: The value of the action. Can be a string, a list of coordinates, or a list of obstacles.
-        """
-        self._type = type
-        self._value = value
-
-    @property
-    def type(self):
-        return self._type
-
-    @property
-    def value(self):
-        return self._value
-    
 class RaspberryPi:
     """
     Class that represents the Raspberry Pi.
@@ -42,7 +24,7 @@ class RaspberryPi:
         #self.logger = prepare_logger()
         self.android = Android()
         self.stm = STM()
-
+        self.pc = PC()
         self.manager = Manager()
 
         # Events
@@ -52,18 +34,16 @@ class RaspberryPi:
         # Locks
         self.movement_lock = self.manager.Lock()
 
-        # Queues
-        self.android_queue = self.manager.Queue()  # Messages to send to Android
-        self.command_queue = self.manager.Queue() # Commands from algorithm to be processed by STM
-
         # Create processes
         self.process_android_receive = None
         self.process_receive_stm = None
-        self.process_android_sender = None
-        self.process_command_execute = None
-        self.ack_flag = False
-        self.first = True
+        self.process_start_stream = None
 
+        # Ack count
+        self.ack_count = 0
+
+
+     
     def start(self):
         """
         Starts the RPi orchestrator
@@ -71,18 +51,25 @@ class RaspberryPi:
         try:
             ### Start up initialization ###
             self.android.connect() # Connect via bluetooth
-            self.android_queue.put(AndroidMessage('general', 'You are connected to the RPi!'))
+            message: AndroidMessage = AndroidMessage('general', 'You are connected to the RPi!')
+            try:
+                self.android.send(message)
+            except OSError:
+                self.android_dropped.set()
+                print("Event set: Android dropped")
+            #self.android_queue.put(AndroidMessage('general', 'You are connected to the RPi!'))
             self.stm.connect() # Connect via serial
+            self.pc.connect() # Connect via socket, rpi ip address
 
             # Initializing child processes
             self.process_android_receive = Process(target=self.android_receive)
             self.process_receive_stm = Process(target=self.receive_stm)
-            self.process_android_sender = Process(target=self.android_sender)
+            self.process_start_stream = Process(target=self.pc.camera_stream)
 
             # Start processes
             self.process_android_receive.start() # Receive from android
             self.process_receive_stm.start() # Receive from STM (ACK)
-            self.process_android_sender.start() # Send out information to be displayed on Android
+            self.process_start_stream.start() # Start Camera Streaming for Capture Of Image
 
             # self.logger.info("Child Processes started")
             print("Child processes started!\n")
@@ -90,19 +77,22 @@ class RaspberryPi:
             ## Start up Complete ##
 
             # Send success messages to Android to let you know ready to start
-            self.android_queue.put(AndroidMessage('general', 'Ready to run!'))
-            self.android_queue.put(AndroidMessage('mode', 'path'))
+            message: AndroidMessage = AndroidMessage('general', 'Ready to run!')
+            try:
+                self.android.send(message)
+            except OSError:
+                self.android_dropped.set()
+                print("Event set: Android dropped")
             self.reconnect_android()
         except KeyboardInterrupt:
             self.stop()
-    
+
     def stop(self):
             """Stops all processes on the RPi and disconnects from Android, STM and PC"""
             self.android.disconnect()
             self.stm.disconnect()
             self.pc.disconnect()
             print("Program Ended\n")
-            #self.logger.info("Program exited!")
 
     def reconnect_android(self):
         """
@@ -117,21 +107,15 @@ class RaspberryPi:
             
             self.android_dropped.wait() # Wait for bluetooth connection to drop with Android.
             print("Android link is down, initiating reconnect\n")
-            #self.logger.error("Android link is down!")
 
             # Kill child processes
             print("Killing Child Processes\n")
-            #self.logger.debug("Killing android child processes")
-            self.process_android_sender.kill()
             self.process_android_receive.kill()
 
             # Wait for the child processes to finish
-            self.process_android_sender.join()
             self.process_android_receive.join()
-            assert self.process_android_sender.is_alive() is False
             assert self.process_android_receive.is_alive() is False
             print("Child Processes Killed Successfully\n")
-            #self.logger.debug("Android child processes killed")
 
             # Clean up old sockets
             self.android.disconnect()
@@ -140,37 +124,21 @@ class RaspberryPi:
             self.android.connect()
 
             # Reinitialise Android processes
-            self.process_android_sender = Process(target=self.android_sender)
             self.process_android_receive = Process(target=self.android_receive)
 
             # Start previously killed processes
-            self.process_android_sender.start()
             self.process_android_receive.start()
 
             print("Android processess successfully restarted")
             #self.logger.info("Android child processes restarted")
-            self.android_queue.put(AndroidMessage("general", "Link successfully reconnected!"))
-            self.android_queue.put(AndroidMessage('mode', 'path'))
-
-            self.android_dropped.clear() # Clear previously set event
-    
-    def android_sender(self) -> None:
-        """
-        [Child process] Responsible for retrieving messages from android_queue and sending them over the Android link. 
-        """
-        while True:
-            # Retrieve message from queue
-            try:
-                message: AndroidMessage = self.android_queue.get(timeout=0.5)
-            except queue.Empty:
-                continue
-
+            message: AndroidMessage = AndroidMessage("general", "Link successfully reconnected!")
             try:
                 self.android.send(message)
             except OSError:
                 self.android_dropped.set()
                 print("Event set: Android dropped")
-                #self.logger.debug("Event set: Android dropped")
+
+            self.android_dropped.clear() # Clear previously set event
 
     def android_receive(self) -> None:
         """
@@ -190,67 +158,91 @@ class RaspberryPi:
 
             # Loads message received from json string into a dictionary
             message: dict = json.loads(message_rcv)
-            
-            if message['type'] == "start":
-                print("Gyro Reset")
-                self.stm.send("RS00")
-            elif message['type'] == "command":
-                if(message['value'] == "up"):
-                    self.movement_lock.acquire()
-                    self.android_queue.put(AndroidMessage("general", "Moving Forward"))
-                    self.stm.send("SF010")
-                elif(message['value'] == "down"):
-                    self.movement_lock.acquire()
-                    self.android_queue.put(AndroidMessage("general", "Moving Backward"))
-                    self.stm.send("SB010")
-                elif(message['value'] == "left"):
-                    self.movement_lock.acquire()
-                    self.android_queue.put(AndroidMessage("general", "Moving Left"))
-                    self.stm.send("LB090")
-                elif(message['value'] == "right"):
-                    self.movement_lock.acquire()
-                    self.android_queue.put(AndroidMessage("general", "Moving Right"))
-                    self.stm.send("LF090")
 
+            ## Command: Set obstacles ##
+            if message['type'] == "action":
+                if message['value'] == "start":
+                    print("Gyro Reset")
+                    self.stm.send("T") #RSOO
+                    time.sleep(10)
+                    self.stm.send("FW") # Move forward until obstacle can be detected by ultrasonic
+                    print("Moving forward")
+                    message: AndroidMessage = AndroidMessage('general', "Moving forward")
+                    try:
+                        self.android.send(message)
+                    except OSError:
+                        self.android_dropped.set()
+                        print("Event set: Android dropped")
+
+    
     def receive_stm(self) -> None:
         """
         [Child Process] Receive acknowledgement messages from STM, and release the movement lock to allow next movement
         """
         while True:
-
             message: str = self.stm.receive()
-            print(message)
             if message.startswith("ACK"):
-                # if self.ack_flag == False:
-                #     self.ack_flag = True
-                #     print("ACK for reset command for STM received")
-                #     #self.logger.debug("ACK for RS00 from STM32 received.")
-                #     continue
+                self.ack_count+=1
                 try:
                     self.movement_lock.release()
                     print("ACK from STM received, movement lock released")
-
-
-                    # cur_location = self.path_queue.get_nowait()
-
-                    # self.current_location['x'] = cur_location['x']
-                    # self.current_location['y'] = cur_location['y']
-                    # self.current_location['d'] = cur_location['d']
-                    # print(f"Current location: {self.current_location}")
-                    #self.logger.info(f"self.current_location = {self.current_location}")
-                    # self.android_queue.put(AndroidMessage('location', {
-                    #     "x": cur_location['x'],
-                    #     "y": cur_location['y'],
-                    #     "d": cur_location['d'],
-                    # }))
-
                 except Exception:
                     print("Tried to release a released lock")
+                
+                if (self.ack_count == 3): # Ready to scan first obstacle
+                    self.movement_lock.acquire()
+                    result = self.cap_and_rec("first_image")
+                    if(result == "38"): #right
+                        self.stm.send("RF") # Increase ack to 6
+                    elif(result == "39"): #left
+                        self.stm.send("LF")
+                    else: # go left by default
+                         self.stm.send("LF")
+
+                if (self.ack_count == 6): # Ready to scan second obstacle
+                    self.movement_lock.acquire()
+                    result = self.cap_and_rec("second_image")
+                    if(result == "38"): #right
+                        self.stm.send("RF") # Increase ack to 9
+                    elif(result == "39"): #left
+                        self.stm.send("LF")
+                    else: # go left by default
+                         self.stm.send("LF")
+
+                # if (self.ack_count == 9): # Last check on bullseye
+                #     self.movement_lock.acquire()
+                #     result = self.cap_and_rec("third_image")
+                #     if(result == "bullseye"): #move forward slowly and park
+                #         self.stm.send("FW")
+                    
             else:
                 print(f"Ignore unknown message from STM: {message}")
-                #self.logger.warning(f"Ignored unknown message from STM: {message}")
 
+    
+    def cap_and_rec(self, obstacle_num: str) -> None:
+        """
+        RPi snaps an image.
+        The response is then forwarded back to the android
+        :param obstacle_num: the current obstacle out of 2 that its scanning for
+        """
+        # Capture image
+        print(f"Turn on video stream for obstacle id: {obstacle_num}")
+            
+        try:
+            self.pc.send("Image Rec Start")
+            result = self.pc.camera_cap()
+        except Exception as e:
+            print("Error in sending/receiving message: %s\n", str(e))
 
-if __name__ == "__main__":
-    rpi = RaspberryPi()
-    rpi.start()
+        print(f"Results: {result}")
+        result_str = f"Result for obstacle {obstacle_num} is: {result}" 
+        
+        message: AndroidMessage = AndroidMessage("general", result_str)
+
+        try:
+            self.android.send(message)
+        except OSError:
+            self.android_dropped.set()
+            print("Event set: Android dropped")
+
+        return result
