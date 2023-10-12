@@ -61,11 +61,16 @@ def capture(expected):
 
     counter = 0
     counter_nothing = 0
+    first = 1
 
     while True:
         ret, image = cap.read()
 
         if not ret:
+            if(first):
+                fail = True
+                stitch(expected, fail)
+                first = 0
             print("Error: Server not on.")
             continue
     
@@ -109,7 +114,7 @@ def capture(expected):
             #Remove the bulleyes
             for i in range(len(res)):
                 detected_class = class_dict.get(int(res[i][5]))
-                if(detected_class != "bullseye"):
+                if(detected_class != "bullseye" and detected_class!="99"):
                     new_res.append(res[i])
 
         if len(new_res) > 0: # Replace biggest bounding box
@@ -121,7 +126,7 @@ def capture(expected):
         else:
             print("Low accuracy image") #Image detected but low accuracy
             counter = counter + 1
-            if (counter >= 3):
+            if (counter >= 4):
                 counter = 0
             else:
                 low_res = []
@@ -132,7 +137,7 @@ def capture(expected):
             #Remove the bulleyes
             for i in range(len(low_res)):
                 low_detected_class = class_dict.get(int(low_res[i][5]))
-                if(low_detected_class != "bullseye"):
+                if(low_detected_class != "bullseye" and low_detected_class!="99"):
                     new_low_res.append(low_res[i])
                  
         if len(new_low_res) > 0: # Replace biggest bounding box
@@ -212,12 +217,12 @@ def capture(expected):
         cv2.destroyAllWindows()
         return reply["class_num"]
 
-def stitch(expected):
+def stitch(expected,fail):
     """Stitched the images together. The directory of each image is found in the argument expected on dictionary value[7]."""
     list_of_images = []
     for key in expected.keys():
         list_of_images.append(expected[key][7])
-    print("Stitching these images: ", list_of_images)
+    print(f"Stitching {len(list_of_images)} images: {list_of_images}")
     widths, heights = zip(*(Image.open(i).size for i in list_of_images))
     total_width = max(widths)*int((len(list_of_images)+1)/2)
     max_height = max(heights)*2
@@ -236,7 +241,10 @@ def stitch(expected):
         else:
             y_offset += im.size[1]
 
-    new_im.save('./Stitched_Images/final_stitched.png')
+    if (fail):
+        new_im.save('./Stitched_Images/final_stitched_safety.png')
+    else:
+        new_im.save('./Stitched_Images/final_stitched.png')
 
 # Socket connection with RPI
 host = "192.168.7.7"
@@ -249,20 +257,20 @@ model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYX.pt")
 model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) 
 
 expected = {}
-start_time = time.time()
+#start_time = time.time()
 count_no_msg = 0
 
 while True:
-    current_time = time.time()
-    elapsed = current_time - start_time
+    # current_time = time.time()
+    # elapsed = current_time - start_time
 
-    if(elapsed > 210):
-        print("3.5 minutes have passed, stitching image")
-        count_no_msg+=1
-        stitch(expected)
-        if (count_no_msg > 2):
-            print("Car stuck, program ended")
-            break
+    # if(elapsed > 210):
+    #     print("3.5 minutes have passed, stitching image")
+    #     count_no_msg+=1
+    #     stitch(expected)
+    #     if (count_no_msg > 2):
+    #         print("Car stuck, program ended")
+    #         break
 
 
     message: Optional[str] = None
@@ -276,7 +284,8 @@ while True:
     count_no_msg = 0
 
     if(message == "Stitch"):
-        stitch(expected)
+        fail = False
+        stitch(expected, fail)
         print("Program ended!")
         break
 
