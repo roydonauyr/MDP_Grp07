@@ -7,8 +7,7 @@ from typing import List
 import numpy as np
 from python_tsp.exact import solve_tsp_dynamic_programming
 
-turn_wrt_big_turns = [[3 * TURN_RADIUS, 2 * TURN_RADIUS],
-                  [4 * TURN_RADIUS, 2 * TURN_RADIUS]]
+turn_wrt_big_turns = [[3 , 2]]
 
 
 class MazeSolver:

@@ -198,15 +198,15 @@ class RaspberryPi:
                 if(message['value'] == "up"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Forward"))
-                    self.stm.send("SF010")
+                    self.stm.send("SF030")
                 elif(message['value'] == "down"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Backward"))
-                    self.stm.send("SB010")
+                    self.stm.send("SB030")
                 elif(message['value'] == "left"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Left"))
-                    self.stm.send("LB090")
+                    self.stm.send("RF090")
                 elif(message['value'] == "right"):
                     self.movement_lock.acquire()
                     self.android_queue.put(AndroidMessage("general", "Moving Right"))

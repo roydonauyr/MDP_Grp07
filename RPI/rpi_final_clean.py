@@ -241,7 +241,7 @@ class RaspberryPi:
                     if not self.command_queue.empty():
                         print("Gyro Reset")
                         self.stm.send("T") #RSOO
-                        time.sleep(10)
+                        time.sleep(6.5)
 
                         # Main trigger to start movement #
                         self.unpause.set() # Set event unpause
