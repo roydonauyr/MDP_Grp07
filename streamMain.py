@@ -27,12 +27,12 @@ def capture():
             continue
     
         # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        img_gray = cv2.resize(image, (640, 460))
+        #img_gray = cv2.resize(image, (640, 460))
         #img_gray = cv2.resize(image, (416, 416))
 
 
         # recognition
-        results = model(img_gray)
+        results = model(image)
         output_frame = results.render()[0]
         cv2.imshow('Object Detection', output_frame)
 
@@ -45,7 +45,7 @@ def capture():
 
 # Model path
 model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYx.pt")
-#model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\kass.pt")
+#model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\kassbest.pt")
 #model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\yolov5v3.pt")
 #model = torch.hub.load('ultralytics/ultralytics:master', 'custom', path=model_weights)
 model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model

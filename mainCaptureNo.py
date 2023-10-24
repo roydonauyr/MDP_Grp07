@@ -50,9 +50,9 @@ def receive() -> Optional[str]:
         #self.logger.error(f"Error receiving message from PC: {e}")
         raise e
 
-def capture(expected):
+def capture(expected, result_of):
     reply = {}    
-    THRESHOLD = 0.7
+    THRESHOLD = 0.6
     
     print("Capture function")
     
@@ -61,6 +61,7 @@ def capture(expected):
 
     counter = 0
     counter_nothing = 0
+    counter_wrong_pred = 0
 
     while True:
         ret, image = cap.read()
@@ -70,10 +71,10 @@ def capture(expected):
             continue
     
         # img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        img_gray = cv2.resize(image, (640, 640))
+        # img_gray = cv2.resize(image, (640, 640))
 
         # recognition
-        results = model(img_gray)
+        results = model(image)
         output_frame = results.render()[0]
         cv2.imshow('Object Detection', output_frame)
 
@@ -105,8 +106,17 @@ def capture(expected):
             #Remove the bulleyes
             for i in range(len(res)):
                 detected_class = class_dict.get(int(res[i][5]))
-                if(detected_class != "bullseye"):
+                if(detected_class =="38" or detected_class == "39"):
+                    counter_wrong_pred = 0
                     new_res.append(res[i])
+                else:
+                    print("Nothing captured") 
+                    counter_wrong_pred = counter_wrong_pred + 1
+                    if (counter_wrong_pred >= 3):
+                        counter_wrong_pred = 0
+                        return "0"
+                    continue
+
 
         if len(new_res) > 0: # Replace biggest bounding box
             biggest_box = new_res[0]
@@ -125,6 +135,7 @@ def capture(expected):
         # Print out the x1, y1, w, h, confidence, and class of predicted object
         x, y, w, h, conf, cls_num = biggest_box
         cls = str(int(cls_num))
+        new_cls = cls + "_" + str(result_of)
 
         x, y, w, h, conf, cls = int(x), int(y), int(w), int(h), round(conf, 2), class_dict.get(int(cls))
         print("Found: {}, {}, {}, {}, {}, {}".format(x, y, w, h, conf, cls))
@@ -140,12 +151,12 @@ def capture(expected):
                     'class_num': cls, "median_diff": median_diff}
 
         # Initialize
-        if cls not in expected:
+        if new_cls not in expected:
             # Creating an empty folder to store the images of that obstacle
             if(os.path.exists(f"./detected_images/{str(cls)}") == False):
                 os.makedirs(f"./detected_images/{str(cls)}")
             
-            expected[cls] = [x, y, w, h, conf, cls, median_diff,
+            expected[new_cls] = [x, y, w, h, conf, cls, median_diff,
                                 f"./detected_images/{str(cls)}/conf{str(conf)}_width{w}_height{h}_diff{median_diff}.png"]
         
             print("*" * 50)
@@ -158,8 +169,8 @@ def capture(expected):
         # Best image is large in bounding box, and has good confidence score (+-0.05)
         #If new image of same id detected and the width(w) and height(h) and conf is more than the original by 0.02 
         #then replace the original
-        elif (w >= expected[cls][2] and h >= expected[cls][3]) and (conf >= expected[cls][4] - 0.02):
-            expected[cls] = [x, y, w, h, conf, cls, median_diff,
+        elif (w >= expected[new_cls][2] and h >= expected[new_cls][3]) and (conf >= expected[new_cls][4] - 0.02):
+            expected[new_cls] = [x, y, w, h, conf, cls, median_diff,
                                 f"./detected_images/{str(cls)}/conf{str(conf)}_width{w}_height{h}_diff{median_diff}.png"]
             print("*" * 50)
             print(f"Getting a better image for {cls}")
@@ -210,25 +221,29 @@ buffer = 1024
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((host, port))
 print("Socket Connected")
-model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYX.pt")
+obstacle_size = 40
+
+if(obstacle_size % 2 == 0):
+    obstacle_final = int(obstacle_size / 2)
+else:
+    obstacle_final = int((obstacle_size + 1) / 2)
+
+print(f"Obstacle size is: {obstacle_final}")
+time.sleep(5)
+send(str(obstacle_final))
+
+#model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\kassbest.pt")
+model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYx.pt")
 model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) 
 
 expected = {}
-start_time = time.time()
+# start_time = time.time()
 count_no_msg = 0
+first_image = 1
+first_result = ""
+result_of = 0
 
 while True:
-    current_time = time.time()
-    elapsed = current_time - start_time
-
-    if(elapsed > 210):
-        print("3.5 minutes have passed, stitching image")
-        count_no_msg+=1
-        stitch(expected)
-        if (count_no_msg > 2):
-            print("Car stuck, program ended")
-            break
-
 
     message: Optional[str] = None
     try:
@@ -243,7 +258,13 @@ while True:
     if(message == "Stitch"):
         stitch(expected)
         print("Program ended!")
-        break
+        expected = {}
+        count_no_msg = 0
+        first_image = 1
+        first_result = ""
+        result_of = 0
+        continue
+        #break
 
     # Model path
     #model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\ks.pt")
@@ -251,11 +272,18 @@ while True:
 
     # Access the webcam feed
     cap = cv2.VideoCapture()  # 0 for the default camera, you can specify a different camera if needed
-
-    returned_result = capture(expected)
+    result_of+=1
+    returned_result = capture(expected, result_of)
+       
     if returned_result != None:
-        # send("Result is: " + returned_result)
-        send(returned_result)
+        if(first_image):
+            first_image = 0
+            first_result = returned_result
+            send(returned_result)
+        else:
+            # send("Result is: " + returned_result)
+            returned_result = first_result + returned_result
+            send(returned_result)
 
 
     

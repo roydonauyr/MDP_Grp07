@@ -41,7 +41,8 @@ class RaspberryPi:
 
         # Ack count
         self.ack_count = 0
-
+        self.first_result = "temp"
+        self.second_result = "temp"
 
      
     def start(self):
@@ -60,6 +61,8 @@ class RaspberryPi:
             #self.android_queue.put(AndroidMessage('general', 'You are connected to the RPi!'))
             self.stm.connect() # Connect via serial
             self.pc.connect() # Connect via socket, rpi ip address
+
+            self.obsSize = int(self.pc.camera_cap())
 
             # Initializing child processes
             self.process_android_receive = Process(target=self.android_receive)
@@ -162,10 +165,15 @@ class RaspberryPi:
             ## Command: Set obstacles ##
             if message['type'] == "action":
                 if message['value'] == "start":
-                    print("Gyro Reset")
-                    self.stm.send("T") #RSOO
-                    time.sleep(10)
-                    self.stm.send("FW") # Move forward until obstacle can be detected by ultrasonic
+                    self.movement_lock.acquire()
+                    self.stm.send("AF000")
+                    # self.first_result = self.cap_and_rec("first_image")
+                    # if(self.first_result == "38" ): #right
+                    #     self.stm.send("RF000") # Increase ack to 6
+                    # elif(self.first_result == "39"): #left
+                    #     self.stm.send("LF000")
+                    # else: # go left by default
+                    #      self.stm.send("LF000")
                     print("Moving forward")
                     message: AndroidMessage = AndroidMessage('general', "Moving forward")
                     try:
@@ -181,6 +189,7 @@ class RaspberryPi:
         """
         while True:
             message: str = self.stm.receive()
+            
             if message.startswith("ACK"):
                 self.ack_count+=1
                 try:
@@ -188,35 +197,47 @@ class RaspberryPi:
                     print("ACK from STM received, movement lock released")
                 except Exception:
                     print("Tried to release a released lock")
-                
-                if (self.ack_count == 3): # Ready to scan first obstacle
-                    self.movement_lock.acquire()
-                    result = self.cap_and_rec("first_image")
-                    if(result == "38"): #right
-                        self.stm.send("RF") # Increase ack to 6
-                    elif(result == "39"): #left
-                        self.stm.send("LF")
-                    else: # go left by default
-                         self.stm.send("LF")
 
-                if (self.ack_count == 6): # Ready to scan second obstacle
+                if(self.ack_count == 1):
                     self.movement_lock.acquire()
-                    result = self.cap_and_rec("second_image")
-                    if(result == "38"): #right
-                        self.stm.send("RF") # Increase ack to 9
-                    elif(result == "39"): #left
-                        self.stm.send("LF")
+                    self.first_result = self.cap_and_rec("first_image")
+                    if(self.first_result == "38"): #right
+                        self.stm.send("RF000") # Increase ack to 6
+                    elif(self.first_result == "39"): #left
+                        self.stm.send("LF000")
                     else: # go left by default
-                         self.stm.send("LF")
+                         self.stm.send("LF000")
 
-                # if (self.ack_count == 9): # Last check on bullseye
-                #     self.movement_lock.acquire()
-                #     result = self.cap_and_rec("third_image")
-                #     if(result == "bullseye"): #move forward slowly and park
-                #         self.stm.send("FW")
-                    
+                if (self.ack_count == 2): # Ready to scan second obstacle
+                    self.movement_lock.acquire()
+                    self.second_result = self.cap_and_rec("second_image")
+                    print(f"Second result is: {self.second_result}") 
+                    if(self.second_result == "3838"): #right, right
+                        self.stm.send("OF000") 
+                    elif(self.second_result == "3939"): #left, left
+                        self.stm.send("MF000")
+                    elif(self.second_result == "3839"): #right, left
+                        self.stm.send("PF000")
+                    elif(self.second_result == "3938"): #left, right
+                        self.stm.send("NF000")
+                    else: # go left by default
+                         self.stm.send("MF000")
+                    self.pc.send("Stitch")
+
+                if (self.ack_count == 3):
+                    #self.pc.send("Stitch")
+                    self.ack_count = 0
+                    self.unpause.clear()
+                    message: AndroidMessage = AndroidMessage("general", "Finished run")
+                    try:
+                        self.android.send(message)
+                    except OSError:
+                        self.android_dropped.set()
+                        print("Event set: Android dropped")
+                    #self.stop()   
             else:
                 print(f"Ignore unknown message from STM: {message}")
+
 
     
     def cap_and_rec(self, obstacle_num: str) -> None:
@@ -246,3 +267,8 @@ class RaspberryPi:
             print("Event set: Android dropped")
 
         return result
+    
+
+if __name__ == "__main__":
+    rpi = RaspberryPi()
+    rpi.start()
