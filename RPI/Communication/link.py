@@ -10,12 +10,6 @@ class Link(ABC):
     - receive()
     """
 
-    # def __init__(self):
-    #     """
-    #     Constructor for Link.
-    #     """
-    #     self.logger = prepare_logger()
-
     @abstractmethod
     def send(self, message: str) -> None:
         pass

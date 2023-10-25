@@ -122,14 +122,11 @@ class PC(Link):
         """
         try:
             unclean_message = self.client_socket.recv(1024)
-            #self.logger.debug(tmp)
             message = unclean_message.strip().decode("utf-8")
             print("Message received from pc: %s", str(message))
-            #self.logger.debug(f"Received from PC: {message}")
             return message
         except OSError as e:  # connection broken, try to reconnect
             print("Message failed to be received: %s", str(e))
-            #self.logger.error(f"Error receiving message from PC: {e}")
             raise e
         
     def camera_stream(self):

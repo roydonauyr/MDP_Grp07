@@ -8,8 +8,6 @@ import requests
 from Communication.android import Android, AndroidMessage
 from Communication.stm import STM
 from Communication.pc import PC
-from Others.const import SYMBOL_MAPPING
-#from logger import prepare_logger
 from Others.configuration import API_IP, API_PORT
 
 class RaspberryPi:
@@ -22,7 +20,6 @@ class RaspberryPi:
         Initializes the Raspberry Pi.
         """
         # Initializations
-        #self.logger = prepare_logger()
         self.pc = PC()
         self.manager = Manager()
         self.streamOn = False
@@ -68,7 +65,6 @@ class RaspberryPi:
             self.process_start_stream.start()
             self.process_command_execute.start()
 
-            # self.logger.info("Child Processes started")
             print("Child processes started!\n")
 
         except KeyboardInterrupt:

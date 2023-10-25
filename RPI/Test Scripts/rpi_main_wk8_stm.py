@@ -8,8 +8,6 @@ import os
 
 from Communication.android import Android, AndroidMessage 
 from Communication.stm import STM
-from Others.const import SYMBOL_MAPPING
-#from logger import prepare_logger
 from Others.configuration import API_IP, API_PORT
 
 class RPiAction:

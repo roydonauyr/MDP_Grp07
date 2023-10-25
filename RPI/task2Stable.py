@@ -8,7 +8,6 @@ import requests
 from Communication.android import Android, AndroidMessage
 from Communication.stm import STM
 from Communication.pc import PC
-#from logger import prepare_logger
 from Others.configuration import API_IP, API_PORT
 
 class RaspberryPi:
@@ -21,7 +20,6 @@ class RaspberryPi:
         Initializes the Raspberry Pi.
         """
         # Initializations
-        #self.logger = prepare_logger()
         self.android = Android()
         self.stm = STM()
         self.pc = PC()
@@ -74,7 +72,6 @@ class RaspberryPi:
             self.process_receive_stm.start() # Receive from STM (ACK)
             self.process_start_stream.start() # Start Camera Streaming for Capture Of Image
 
-            # self.logger.info("Child Processes started")
             print("Child processes started!\n")
 
             ## Start up Complete ##
@@ -104,8 +101,6 @@ class RaspberryPi:
         """
 
         print("Reconnection handler is watching\n")
-        #self.logger.info("Reconnection handler is watching...")
-
         while True:
             
             self.android_dropped.wait() # Wait for bluetooth connection to drop with Android.
@@ -133,7 +128,7 @@ class RaspberryPi:
             self.process_android_receive.start()
 
             print("Android processess successfully restarted")
-            #self.logger.info("Android child processes restarted")
+
             message: AndroidMessage = AndroidMessage("general", "Link successfully reconnected!")
             try:
                 self.android.send(message)
@@ -154,7 +149,7 @@ class RaspberryPi:
             except OSError:
                 self.android_dropped.set()
                 print("Event set: Bluetooth connection dropped")
-                #self.logger.debug("Event set: Android connection dropped")
+
 
             if message_rcv is None:
                 continue
