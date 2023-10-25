@@ -163,11 +163,9 @@ class RaspberryPi:
             
             self.android_dropped.wait() # Wait for bluetooth connection to drop with Android.
             print("Android link is down, initiating reconnect\n")
-            #self.logger.error("Android link is down!")
 
             # Kill child processes
             print("Killing Child Processes\n")
-            #self.logger.debug("Killing android child processes")
             self.process_android_sender.kill()
             self.process_android_receive.kill()
 
@@ -177,7 +175,6 @@ class RaspberryPi:
             assert self.process_android_sender.is_alive() is False
             assert self.process_android_receive.is_alive() is False
             print("Child Processes Killed Successfully\n")
-            #self.logger.debug("Android child processes killed")
 
             # Clean up old sockets
             self.android.disconnect()
@@ -194,7 +191,6 @@ class RaspberryPi:
             self.process_android_receive.start()
 
             print("Android processess successfully restarted")
-            #self.logger.info("Android child processes restarted")
             self.android_queue.put(AndroidMessage("general", "Link successfully reconnected!"))
             self.android_queue.put(AndroidMessage('mode', 'path'))
 

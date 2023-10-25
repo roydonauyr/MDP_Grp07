@@ -8,8 +8,6 @@ import requests
 from Communication.android import Android, AndroidMessage
 from Communication.stm import STM
 from Communication.pc import PC
-from Others.const import SYMBOL_MAPPING
-#from logger import prepare_logger
 from Others.configuration import API_IP, API_PORT
 
 class RaspberryPi:
@@ -73,8 +71,6 @@ class RaspberryPi:
             self.process_start_stream.start()
             self.process_receive_stm.start() # Receive from STM (ACK)
             self.process_command_execute.start() # Commands to Send Out To STM
-
-            # self.logger.info("Child Processes started")
             print("Child processes started!\n")
 
         except KeyboardInterrupt:
@@ -85,7 +81,6 @@ class RaspberryPi:
             self.stm.disconnect()
             self.pc.disconnect()
             print("Program Ended\n")
-            #self.logger.info("Program exited!")
 
     def check_api(self) -> bool:
         """Check whether image recognition and algorithm API server is up and running
@@ -175,7 +170,6 @@ class RaspberryPi:
 
         # Print commands received
         print(f"Commands received from API: {commands}")
-        #self.logger.debug(f"Commands received from API: {commands}")
 
         # Put commands and paths into respective queues
         self.clear_queues() # clear queues first to ensure all starts empty

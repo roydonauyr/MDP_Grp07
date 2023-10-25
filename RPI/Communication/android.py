@@ -115,7 +115,6 @@ class Android(Link):
         super().__init__()
         self.hostId = "192.168.7.7"
         self.uuid = "00001101-0000-1000-8000-00805f9b34fb" #Default but should try generated
-        #self.uuid = ""
         self.connected = False
         self.client_socket = None
         self.server_socket = None
@@ -124,7 +123,6 @@ class Android(Link):
         """
         Connect to Andriod by Bluetooth
         """
-        #self.logger.info("Bluetooth connection started")
         print("Bluetooth Connection Started")
         try:
             # Set RPi to be discoverable in order for service to be advertisable
@@ -145,24 +143,19 @@ class Android(Link):
             bt.advertise_service(self.server_socket, "MDP-Group7-RPi", service_id=self.uuid, service_classes=[
                                         self.uuid, bt.SERIAL_PORT_CLASS], profiles=[bt.SERIAL_PORT_PROFILE])
 
-            # self.logger.info(
-            #     f"Awaiting Bluetooth connection on RFCOMM CHANNEL {port}")
             print("Awaiting bluetooth connection on port: %d", port)
             self.client_socket, client_address = self.server_socket.accept()
-            #self.logger.info(f"Accepted connection from: {client_address}")
             print("Accepted connection from client address of: %s", str(client_address))
             self.connected = True
 
         except Exception as e:
             print("Android socket connection failed: %s", str(e))
-            #self.logger.error(f"Error in Bluetooth link connection: {e}")
             self.server_socket.close()
             self.client_socket.close()
 
     def disconnect(self):
         """Disconnect from Android Bluetooth connection and shutdown all the sockets established"""
         try:
-            #self.logger.debug("Disconnecting Bluetooth link")
             print("Disconnecting bluetooth")
             self.server_socket.shutdown(socket.SHUT_RDWR)
             self.client_socket.shutdown(socket.SHUT_RDWR)
@@ -172,9 +165,7 @@ class Android(Link):
             self.server_socket = None
             self.connected = False
             print("Bluetooth has been disconnected")
-            #self.logger.info("Disconnected Bluetooth link")
         except Exception as e:
-            #self.logger.error(f"Failed to disconnect Bluetooth link: {e}")
             print("Failed to disconnect bluetooth: %s", str(e))
 
     def send(self, message: AndroidMessage):
@@ -182,24 +173,19 @@ class Android(Link):
         try:
             self.client_socket.send(f"{message.jsonify}\n".encode("utf-8"))
             print("Sent to Android: %s", str(message.jsonify))
-            #self.logger.debug(f"Sent to Android: {message.jsonify}")
         except OSError as e:
             print("Message sending failed: %s", str(e))
-            #self.logger.error(f"Error sending message to Android: {e}")
             raise e
 
     def receive(self) -> Optional[str]:
         """Receive message from Android"""
         try:
             unclean_message = self.client_socket.recv(1024)
-            #self.logger.debug(tmp)
             message = unclean_message.strip().decode("utf-8")
             print("Message received from Android: %s", str(message))
-            #self.logger.debug(f"Received from Android: {message}")
             return message
         except OSError as e:  # connection broken, try to reconnect
             print("Message failed to be received: %s", str(e))
-            #self.logger.error(f"Error receiving message from Android: {e}")
             raise e
         
     def repeatMessageTest(self):

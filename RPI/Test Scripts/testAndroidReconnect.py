@@ -11,7 +11,6 @@ def reconnect_android():
         """
 
         print("Reconnection handler is watching\n")
-        #self.logger.info("Reconnection handler is watching...")
         
         # Clean up old sockets
         android.disconnect()
@@ -21,7 +20,6 @@ def reconnect_android():
      
 
         print("Android processess successfully restarted")
-        #self.logger.info("Android child processes restarted")
         print("Reconnection successful")
 
 if __name__ == "__main__":
@@ -41,13 +39,5 @@ if __name__ == "__main__":
              reconnect_android()
              android.send(AndroidMessage('general', "Reconnected."))
 
-#     while True:
-#         message_rcv: Optional[str] = None
-#         try:
-#              message_rcv = android.receive()
-#              break
-#         except OSError as e:
-#              print("Disconnected")
-#              reconnect_android()
-#              android.send(AndroidMessage('general', "Reconnected."))
+
         

@@ -232,8 +232,7 @@ print(f"Obstacle size is: {obstacle_final}")
 time.sleep(5)
 send(str(obstacle_final))
 
-#model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\kassbest.pt")
-model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYx.pt")
+model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\final.pt")
 model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) 
 
 expected = {}

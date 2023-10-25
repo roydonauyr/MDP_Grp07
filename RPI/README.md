@@ -76,18 +76,13 @@ Below are the possible commands that are used for the robot's movement. Commands
 Commands | Explanation
 #### STM Commands
 * RSOO | Resetting the gyro before starting movement
-* FWxx | Move robot forward by xx units
-* FR00 | Move robot forward and right by 3x1 squares
-* FL00 | Move robot forward left by 3x1 squares
-* BWxx | Robot moves backward by xx units
-* BR00 | Robot moves backward right by 3x1 squares
-* BL00 | Robot moves backward left by 3x1 squares
-* TL |
-* TR |
-* A | 
-* C |
-* DT |  
-* ZZ |
+* SFxx | Move robot forward by xx units
+* RF00 | Move robot forward and right by 3x1 squares
+* LF00 | Move robot forward left by 3x1 squares
+* SBxx | Robot moves backward by xx units
+* RB00 | Robot moves backward right by 3x1 squares
+* LB00 | Robot moves backward left by 3x1 squares
+
 
 #### Misc Commands
 * STOP | Robot stops moving

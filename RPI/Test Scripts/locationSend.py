@@ -8,8 +8,6 @@ import requests
 from Communication.android import Android, AndroidMessage
 from Communication.stm import STM
 from Communication.pc import PC
-from Others.const import SYMBOL_MAPPING
-#from logger import prepare_logger
 from Others.configuration import API_IP, API_PORT
 
 class RaspberryPi:
@@ -52,7 +50,6 @@ class RaspberryPi:
             self.current_location['y'] = 9
             self.current_location['d'] = "N" # 0 is North
             print(f"Current location: {self.current_location}")
-            #self.logger.info(f"self.current_location = {self.current_location}")
             self.android_queue.put(AndroidMessage('location', {
                 "x":  self.current_location['x'],
                 "y":  self.current_location['y'],
@@ -67,8 +64,6 @@ class RaspberryPi:
             # Start processes
             self.process_android_receive.start() # Receive from android
             self.process_android_sender.start() # Send out information to be displayed on Android
-
-            # self.logger.info("Child Processes started")
             print("Child processes started!\n")
 
             ## Start up Complete ##
@@ -82,7 +77,6 @@ class RaspberryPi:
             """Stops all processes on the RPi and disconnects from Android, STM and PC"""
             self.android.disconnect()
             print("Program Ended\n")
-            #self.logger.info("Program exited!")
     
     def reconnect_android(self):
 
@@ -158,7 +152,6 @@ class RaspberryPi:
             except OSError:
                 self.android_dropped.set()
                 print("Event set: Android dropped")
-                #self.logger.debug("Event set: Android dropped")
 
 if __name__ == "__main__":
     rpi = RaspberryPi()

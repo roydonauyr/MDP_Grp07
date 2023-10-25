@@ -253,7 +253,7 @@ buffer = 1024
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((host, port))
 print("Socket Connected")
-model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYX.pt")
+model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\final.pt")
 model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) 
 
 expected = {}
@@ -290,7 +290,6 @@ while True:
         break
 
     # Model path
-    #model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\ks.pt")
     # Load the YOLOv5 model
 
     # Access the webcam feed

@@ -8,8 +8,6 @@ import requests
 from Communication.android import Android, AndroidMessage
 from Communication.stm import STM
 from Communication.pc import PC
-from Others.const import SYMBOL_MAPPING
-#from logger import prepare_logger
 from Others.configuration import API_IP, API_PORT
 
 class RaspberryPi:
@@ -74,8 +72,6 @@ class RaspberryPi:
             # Start processes
             self.process_receive_stm.start() # Receive from STM (ACK)
             self.process_command_execute.start() # Commands to Send Out To STM
-
-            # self.logger.info("Child Processes started")
             print("Child processes started!\n")
 
         except KeyboardInterrupt:
@@ -85,7 +81,7 @@ class RaspberryPi:
             """Stops all processes on the RPi and disconnects from Android, STM and PC"""
             self.stm.disconnect()
             print("Program Ended\n")
-            #self.logger.info("Program exited!")
+
 
     def receive_stm(self) -> None:
         while True:

@@ -44,10 +44,7 @@ def capture():
     cv2.destroyAllWindows()
 
 # Model path
-model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\bestYx.pt")
-#model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\kassbest.pt")
-#model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\yolov5v3.pt")
-#model = torch.hub.load('ultralytics/ultralytics:master', 'custom', path=model_weights)
+model_weights = Path("C:\\Roydon\\Github\\MDP_Grp07\\final.pt")
 model = torch.hub.load('ultralytics/yolov5:master', 'custom', path=model_weights) # Load the YOLOv5 model
 
 # Access the webcam feed
