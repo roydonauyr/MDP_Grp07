@@ -77,11 +77,11 @@ Commands | Explanation
 #### STM Commands
 * RSOO | Resetting the gyro before starting movement
 * SFxx | Move robot forward by xx units
-* RF00 | Move robot forward and right by 3x1 squares
-* LF00 | Move robot forward left by 3x1 squares
+* RF00 | Move robot forward and right by 3x2 squares
+* LF00 | Move robot forward left by 3x2 squares
 * SBxx | Robot moves backward by xx units
-* RB00 | Robot moves backward right by 3x1 squares
-* LB00 | Robot moves backward left by 3x1 squares
+* RB00 | Robot moves backward right by 3x2 squares
+* LB00 | Robot moves backward left by 3x2 squares
 
 
 #### Misc Commands
