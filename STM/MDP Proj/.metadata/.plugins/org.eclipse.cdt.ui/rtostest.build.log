@@ -1,0 +1,117 @@
+15:19:41 **** Incremental Build of configuration Debug for project rtostest ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I"C:/Users/swrgo/Desktop/aNTU STUFF/_RunHerez/rtostest/PeripheralDriver/Inc" -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'moveCarSlideRight':
+../Core/Src/main.c:924:8: warning: implicit declaration of function 'finishCheck' [-Wimplicit-function-declaration]
+  924 |  while(finishCheck());
+      |        ^~~~~~~~~~~
+../Core/Src/main.c: In function 'moveCarRight90':
+../Core/Src/main.c:961:6: warning: variable 'sign' set but not used [-Wunused-but-set-variable]
+  961 |  int sign = 1;
+      |      ^~~~
+../Core/Src/main.c: In function 'moveCarLeft90':
+../Core/Src/main.c:983:6: warning: variable 'sign' set but not used [-Wunused-but-set-variable]
+  983 |  int sign = 1;
+      |      ^~~~
+../Core/Src/main.c: In function 'PID_Control':
+../Core/Src/main.c:1023:10: warning: implicit declaration of function 'abs' [-Wimplicit-function-declaration]
+ 1023 |  error = abs(error);
+      |          ^~~
+../Core/Src/main.c: In function 'StartDefaultTask':
+../Core/Src/main.c:1149:11: warning: unused variable 'ch' [-Wunused-variable]
+ 1149 |   uint8_t ch = 'A';
+      |           ^~
+../Core/Src/main.c:1144:10: warning: unused variable 'msg' [-Wunused-variable]
+ 1144 |  uint8_t msg [20];
+      |          ^~~
+../Core/Src/main.c: In function 'StartMotorTask':
+../Core/Src/main.c:1237:23: warning: 'abs' argument 1 promotes to 'int32_t' {aka 'long int'} where 'int' is expected in a call to built-in function declared without prototype [-Wbuiltin-declaration-mismatch]
+ 1237 |    if (abs(leftTarget - leftEncoderVal)>abs(rightTarget - rightEncoderVal)){
+      |            ~~~~~~~~~~~^~~~~~~~~~~~~~~~
+<built-in>: note: built-in 'abs' declared here
+../Core/Src/main.c:1237:57: warning: 'abs' argument 1 promotes to 'int32_t' {aka 'long int'} where 'int' is expected in a call to built-in function declared without prototype [-Wbuiltin-declaration-mismatch]
+ 1237 |    if (abs(leftTarget - leftEncoderVal)>abs(rightTarget - rightEncoderVal)){
+      |                                             ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+<built-in>: note: built-in 'abs' declared here
+../Core/Src/main.c:1240:23: warning: 'abs' argument 1 promotes to 'int32_t' {aka 'long int'} where 'int' is expected in a call to built-in function declared without prototype [-Wbuiltin-declaration-mismatch]
+ 1240 |    if (abs(leftTarget - leftEncoderVal)<100){
+      |            ~~~~~~~~~~~^~~~~~~~~~~~~~~~
+<built-in>: note: built-in 'abs' declared here
+../Core/Src/main.c: In function 'StartOledTask':
+../Core/Src/main.c:1313:2: warning: implicit declaration of function 'sprintf' [-Wimplicit-function-declaration]
+ 1313 |  sprintf(clear, "US: %d\0", (int)uDistance);
+      |  ^~~~~~~
+../Core/Src/main.c:1313:2: warning: incompatible implicit declaration of built-in function 'sprintf'
+../Core/Src/main.c:26:1: note: include '<stdio.h>' or provide a declaration of 'sprintf'
+   25 | #include "oled.h"
+  +++ |+#include <stdio.h>
+   26 | /* USER CODE END Includes */
+../Core/Src/main.c:1313:10: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
+ 1313 |  sprintf(clear, "US: %d\0", (int)uDistance);
+      |          ^~~~~
+      |          |
+      |          uint8_t * {aka unsigned char *}
+../Core/Src/main.c:1313:10: note: expected 'char *' but argument is of type 'uint8_t *' {aka 'unsigned char *'}
+../Core/Src/main.c:1313:24: warning: embedded '\0' in format [-Wformat-contains-nul]
+ 1313 |  sprintf(clear, "US: %d\0", (int)uDistance);
+      |                        ^~
+../Core/Src/main.c:1320:10: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
+ 1320 |  sprintf(righty,"Gyro: %d.%d \0", (int)total_angle, decimals);
+      |          ^~~~~~
+      |          |
+      |          uint8_t * {aka unsigned char *}
+../Core/Src/main.c:1320:10: note: expected 'char *' but argument is of type 'uint8_t *' {aka 'unsigned char *'}
+../Core/Src/main.c:1320:30: warning: embedded '\0' in format [-Wformat-contains-nul]
+ 1320 |  sprintf(righty,"Gyro: %d.%d \0", (int)total_angle, decimals);
+      |                              ^~
+../Core/Src/main.c:1325:10: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
+ 1325 |  sprintf(lefty, "S: %c %c %c%c%c \0", old_Buff1[0], old_Buff1[1], old_Buff1[2], old_Buff1[3], old_Buff1[4]);
+      |          ^~~~~
+      |          |
+      |          uint8_t * {aka unsigned char *}
+../Core/Src/main.c:1325:10: note: expected 'char *' but argument is of type 'uint8_t *' {aka 'unsigned char *'}
+../Core/Src/main.c:1325:34: warning: embedded '\0' in format [-Wformat-contains-nul]
+ 1325 |  sprintf(lefty, "S: %c %c %c%c%c \0", old_Buff1[0], old_Buff1[1], old_Buff1[2], old_Buff1[3], old_Buff1[4]);
+      |                                  ^~
+../Core/Src/main.c:1332:10: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
+ 1332 |  sprintf(motorD, "O: %c %c %c%c%c \0", old_Buff[0], old_Buff[1], old_Buff[2], old_Buff[3], old_Buff[4]);
+      |          ^~~~~~
+      |          |
+      |          uint8_t * {aka unsigned char *}
+../Core/Src/main.c:1332:10: note: expected 'char *' but argument is of type 'uint8_t *' {aka 'unsigned char *'}
+../Core/Src/main.c:1332:35: warning: embedded '\0' in format [-Wformat-contains-nul]
+ 1332 |  sprintf(motorD, "O: %c %c %c%c%c \0", old_Buff[0], old_Buff[1], old_Buff[2], old_Buff[3], old_Buff[4]);
+      |                                   ^~
+../Core/Src/main.c:1335:10: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
+ 1335 |  sprintf(check, "K: %c %c %c%c%c \0", aRxBuffer[0], aRxBuffer[1], aRxBuffer[2], aRxBuffer[3], aRxBuffer[4]);
+      |          ^~~~~
+      |          |
+      |          uint8_t * {aka unsigned char *}
+../Core/Src/main.c:1335:10: note: expected 'char *' but argument is of type 'uint8_t *' {aka 'unsigned char *'}
+../Core/Src/main.c:1335:34: warning: embedded '\0' in format [-Wformat-contains-nul]
+ 1335 |  sprintf(check, "K: %c %c %c%c%c \0", aRxBuffer[0], aRxBuffer[1], aRxBuffer[2], aRxBuffer[3], aRxBuffer[4]);
+      |                                  ^~
+../Core/Src/main.c:1305:10: warning: unused variable 'debugMsg' [-Wunused-variable]
+ 1305 |  uint8_t debugMsg[20] = "hello\0";
+      |          ^~~~~~~~
+../Core/Src/main.c:1299:10: warning: unused variable 'hello' [-Wunused-variable]
+ 1299 |  uint8_t hello [20] = {0};
+      |          ^~~~~
+../Core/Src/main.c: In function 'StartBulleyesTask':
+../Core/Src/main.c:1560:6: warning: unused variable 'i' [-Wunused-variable]
+ 1560 |  int i=0;
+      |      ^
+arm-none-eabi-gcc -o "rtostest.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\swrgo\Desktop\aNTU STUFF\_RunHerez\rtostest\STM32F407VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="rtostest.map" -Wl,--gc-sections -static -u_printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: rtostest.elf
+ 
+arm-none-eabi-size   rtostest.elf 
+arm-none-eabi-objdump -h -S  rtostest.elf  > "rtostest.list"
+   text	   data	    bss	    dec	    hex	filename
+  61616	    492	  22280	  84388	  149a4	rtostest.elf
+Finished building: default.size.stdout
+ 
+Finished building: rtostest.list
+ 
+
+15:19:42 Build Finished. 0 errors, 24 warnings. (took 1s.226ms)
+
