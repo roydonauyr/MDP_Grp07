@@ -7,7 +7,7 @@ from typing import List
 import numpy as np
 from python_tsp.exact import solve_tsp_dynamic_programming
 
-turn_wrt_big_turns = [[3 , 2]]
+turn_radius_x_y = [[3 , 2]]
 
 
 class MazeSolver:
@@ -18,7 +18,7 @@ class MazeSolver:
             robot_x: int,
             robot_y: int,
             robot_direction: Direction,
-            big_turn=None # the big_turn here is to allow 3-1 turn(0 - by default) | 4-2 turn(1)
+            big_turn=None
     ):
         # Initialize a Grid object for the arena representation
         self.grid = Grid(size_x, size_y)
@@ -33,14 +33,6 @@ class MazeSolver:
             self.big_turn = int(big_turn)
 
     def add_obstacle(self, x: int, y: int, direction: Direction, obstacle_id: int):
-        """Add obstacle to MazeSolver object
-
-        Args:
-            x (int): x coordinate of obstacle
-            y (int): y coordinate of obstacle
-            direction (Direction): Facing of the obstacle
-            obstacle_id (int): ID of obstacle
-        """
         # Create an obstacle object
         obstacle = Obstacle(x, y, direction, obstacle_id)
         # Add created obstacle to grid object
@@ -51,16 +43,6 @@ class MazeSolver:
 
     @staticmethod
     def compute_coord_distance(x1: int, y1: int, x2: int, y2: int, level=1):
-        """Compute the L-n distance between two coordinates
-
-        Args:
-            x1 (int), y1 (int): Coordinates of the first point
-            x2 (int), y2 (int): Coordinates of the second point
-            level (int, optional): The type of L-n norm to compute. Defaults to 1 (Manhattan distance). Level 2 is Euclidean distance.
-
-        Returns:
-            float: The computed L-n distance between the two points
-        """
         horizontal_dist = x1 - x2
         vertical_dist = y1 - y2
 
@@ -72,28 +54,12 @@ class MazeSolver:
 
     @staticmethod
     def compute_state_distance(start_state: CellState, end_state: CellState, level=1):
-        """Compute the L-n distance between two cellState states
-
-        Args:
-            start_state (CellState): Start cellState state
-            end_state (CellState): End cellState state
-            level (int, optional): L-n distance to compute. Defaults to 1.
-
-        Returns:
-            float: L-n distance between the two given cellState states
-        """
+        # Compute the L-n distance between two cellState states
         return MazeSolver.compute_coord_distance(start_state.x, start_state.y, end_state.x, end_state.y, level)
 
     @staticmethod
     def get_visit_options(n):
-        """Generate all possible n-digit binary strings
-
-        Args:
-            n (int): number of digits in binary string to generate
-
-        Returns:
-            List: list of all possible n-digit binary strings
-        """
+        # Generate all possible n-digit binary strings to visit
         s = []
         l = bin(2 ** n - 1).count('1')
 
@@ -111,9 +77,6 @@ class MazeSolver:
         all_view_positions = self.grid.get_view_obstacle_positions(retrying)
 
         for op in self.get_visit_options(len(all_view_positions)):
-            # op is binary string of length len(all_view_positions) == len(obstacles)
-            # If index == 1 means the view_positions[index] is selected to visit, otherwise drop
-
             # Calculate optimal_cost table
 
             # Initialize `items` to be a list containing the robot's start state as the first item
@@ -135,8 +98,8 @@ class MazeSolver:
             combination = []
             self.generate_combination(cur_view_positions, 0, [], combination, [ITERATIONS])
             
-            for c in combination: # run the algo some times ->
-                visited_candidates = [0] # add the start state of the robot
+            for c in combination: 
+                visited_candidates = [0] 
 
                 cur_index = 1
                 fixed_cost = 0 # the cost applying for the position taking obstacle pictures
@@ -158,8 +121,7 @@ class MazeSolver:
                         cost_np[e][s] = cost_np[s][e]
                 cost_np[:, 0] = 0
                 _permutation, _distance = solve_tsp_dynamic_programming(cost_np)
-                # print(f"fixed_cost = {fixed_cost}")
-                # print(f"distance = {_distance}")
+
                 if _distance + fixed_cost >= distance:
                     continue
 
@@ -183,21 +145,7 @@ class MazeSolver:
 
     @staticmethod
     def generate_combination(view_positions, index, current, result, iteration_left):
-        """
-        Generate all possible combinations of view positions up to a given limit of iterations.
-
-        This method uses recursion to explore all possible combinations. It is part of a backtracking algorithm.
-
-        Args:
-            view_positions (List[List[int]]): A list of lists where each inner list contains possible positions at a specific index.
-            index (int): The current index of view_positions to consider.
-            current (List[int]): The current combination of positions being generated.
-            result (List[List[int]]): A list that will store all generated combinations.
-            iteration_left ([int]): A list with a single integer, representing the remaining number of iterations allowed.
-
-        Returns:
-            None: The result list will be modified in-place to include the generated combinations.
-        """
+        # Generate all possible combinations of view positions up to a given limit of iterations.
         if index == len(view_positions):
             result.append(current[:])
             return
@@ -212,35 +160,17 @@ class MazeSolver:
             current.pop()
 
     def get_safe_cost(self, x, y):
-        """Get the safe cost of a particular x,y coordinate wrt obstacles that are exactly 2 units away from it in both x and y directions
-
-        Args:
-            x (int): x-coordinate
-            y (int): y-coordinate
-
-        Returns:
-            int: safe cost
-        """
+        # Get the safe cost of a particular x,y coordinate wrt obstacles that are exactly 2 units away from it in both x and y directions
         for ob in self.grid.obstacles:
             if abs(ob.x-x) == 2 and abs(ob.y-y) == 2 or \
                 abs(ob.x-x) == 1 and abs(ob.y-y) == 2 or \
                     abs(ob.x-x) == 2 and abs(ob.y-y) == 1:
                 
                 return SAFE_COST
-            
-            # if abs(ob.x-x) == 1 and abs(ob.y-y) == 2:
-            #     return SAFE_COST
-            
-            # if abs(ob.x-x) == 2 and abs(ob.y-y) == 1:
-            #     return SAFE_COST
 
         return 0
 
     def get_neighbors(self, x, y, direction):
-        """
-        Return a list of tuples with format:
-        newX, newY, new_direction
-        """
         # Neighbors have the following format: {newX, newY, movement direction, safe cost}
         # Neighbors are coordinates that fulfill the following criteria:
         # If moving in the same direction:
@@ -267,8 +197,8 @@ class MazeSolver:
             else:  # consider 8 cases
                 
                 # Turning displacement is either 4-2 or 3-1
-                bigger_change = turn_wrt_big_turns[self.big_turn][0]
-                smaller_change = turn_wrt_big_turns[self.big_turn][1]
+                bigger_change = turn_radius_x_y[self.big_turn][0]
+                smaller_change = turn_radius_x_y[self.big_turn][1]
 
                 # north <-> east
                 if direction == Direction.NORTH and md == Direction.EAST:
@@ -355,11 +285,7 @@ class MazeSolver:
         return neighbors
 
     def path_cost_generator(self, states: List[CellState]):
-        """Generate the path cost between the input states and update the tables accordingly
-
-        Args:
-            states (List[CellState]): cellState states to visit
-        """
+        # Generate the path cost between the input states and update the tables accordingly
         def record_path(start, end, parent: dict, cost: int):
 
             # Update cost table for the (start,end) and (end,start) edges
@@ -415,7 +341,7 @@ class MazeSolver:
                     if (next_x, next_y, new_direction) in visited:
                         continue
 
-                    move_cost = Direction.rotation_cost(new_direction, cur_direction) * TURN_FACTOR + 1 + safe_cost
+                    move_cost = Direction.rotation_cost(new_direction, cur_direction) * 2 + safe_cost
 
                     # the cost to check if any obstacles that considered too near the robot; if it
                     # safe_cost =

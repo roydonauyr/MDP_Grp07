@@ -2,33 +2,11 @@ from constants import WIDTH, HEIGHT, Direction
 
 
 def is_valid(center_x: int, center_y: int):
-    """Checks if given position is within bounds
-
-    Inputs
-    ------
-    center_x (int): x-coordinate
-    center_y (int): y-coordinate
-
-    Returns
-    -------
-    bool: True if valid, False otherwise
-    """
     return center_x > 0 and center_y > 0 and center_x < WIDTH - 1 and center_y < HEIGHT - 1
 
 
 def command_generator(states, obstacles):
-    """
-    This function takes in a list of states and generates a list of commands for the robot to follow
-    
-    Inputs
-    ------
-    states: list of State objects 
-    obstacles: list of obstacles, each obstacle is a dictionary with keys "x", "y", "d", and "id"
-
-    Returns
-    -------
-    commands: list of commands for the robot to follow
-    """
+    # This function takes in a list of states and generates a list of commands for the robot to follow
 
     # Convert the list of obstacles into a dictionary with key as the obstacle id and value as the obstacle
     obstacles_dict = {ob['id']: ob for ob in obstacles}
@@ -135,7 +113,7 @@ def command_generator(states, obstacles):
                 else:
                     commands.append("RB090")
             else:
-                raise Exception("Invalid turing direction")
+                raise Exception("Invalid turning direction")
 
         elif states[i - 1].direction == Direction.EAST:
             if states[i].direction == Direction.NORTH:
@@ -150,7 +128,7 @@ def command_generator(states, obstacles):
                 else:
                     commands.append("RF090")
             else:
-                raise Exception("Invalid turing direction")
+                raise Exception("Invalid turning direction")
 
         elif states[i - 1].direction == Direction.SOUTH:
             if states[i].direction == Direction.EAST:
@@ -164,7 +142,7 @@ def command_generator(states, obstacles):
                 else:
                     commands.append("RF090")
             else:
-                raise Exception("Invalid turing direction")
+                raise Exception("Invalid turning direction")
 
         elif states[i - 1].direction == Direction.WEST:
             if states[i].direction == Direction.NORTH:
@@ -178,7 +156,7 @@ def command_generator(states, obstacles):
                 else:
                     commands.append("LF090")
             else:
-                raise Exception("Invalid turing direction")
+                raise Exception("Invalid turning direction")
         else:
             raise Exception("Invalid position")
 
@@ -189,8 +167,8 @@ def command_generator(states, obstacles):
             # SOUTH = 4
             # WEST = 6
 
-            current_ob_dict = obstacles_dict[states[i].screenshot_id] # {'x': 9, 'y': 10, 'd': 6, 'id': 9}
-            current_robot_position = states[i] # {'x': 1, 'y': 8, 'd': <Direction.NORTH: 0>, 's': -1}
+            current_ob_dict = obstacles_dict[states[i].screenshot_id] 
+            current_robot_position = states[i] 
 
             # Obstacle facing WEST, robot facing EAST
             if current_ob_dict['d'] == 6 and current_robot_position.direction == 2:
@@ -262,7 +240,6 @@ def command_generator(states, obstacles):
         # If both commands are SF
         elif commands[i].startswith("SF") and compressed_commands[-1].startswith("SF"):
             # Get the number of steps of previous command
-            # print(compressed_commands[-1])
             if int(compressed_commands[-1][2]) == 0:
                 steps = int(compressed_commands[-1][3:])
             else:

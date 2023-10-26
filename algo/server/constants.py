@@ -22,8 +22,6 @@ MOVE_DIRECTION = [
     (0, -1, Direction.SOUTH),
 ]
 
-TURN_FACTOR = 1
-
 EXPANDED_CELL = 1 # for both agent and obstacles
 
 WIDTH = 20
